@@ -5,13 +5,8 @@
 /**
  *
  *
-   https://WomensRights.xyz
-   https://x.com/womensrightseth
-   https://t.me/WomensRightsDAO
-   
-
    Contract features:
-   69,000,420 tokens
+   100,000,000 tokens
    3% buy tax in ETH sent to marketing, community & dev
    16% sell tax in ETH sent to marketing, community & dev
  */
@@ -1170,7 +1165,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
  
-contract women is ERC20, Ownable {
+contract old is ERC20, Ownable {
     using SafeMath for uint256;
  
     IUniswapV2Router02 public immutable uniswapV2Router;
@@ -1228,54 +1223,54 @@ contract women is ERC20, Ownable {
         address indexed oldWallet
     );
  
-    constructor() ERC20("Womens Rights in Web3", "WOMEN") {
+    constructor() ERC20("My Old Contract Standard", "OLD") {
         uniswapV2Router = IUniswapV2Router02(
             0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
         );
         _approve(address(this), address(uniswapV2Router), type(uint256).max);
  
-        uint256 totalSupply = 69_000_420 ether;
+        uint256 totalSupply = 100_000_000 ether;
  
-        maxTransactionAmount = (totalSupply) / 50; // 2% of total supply (1,380,008 tokens)
-        maxWallet = (totalSupply) / 20;  // 5% of total supply (3,450,021 tokens)
+        maxTransactionAmount = (totalSupply) / 50; // 2% of total supply (2,000,000 tokens)
+        maxWallet = (totalSupply) / 20;  // 5% of total supply (5,000,000 tokens)
         swapTokensAtAmount = (totalSupply * 5) / 10000;
  
         buyMarketingFee = 1;
-        buyDevelopmentFee = 1;
         buyCommunityFundFee = 1;
+        buyDevelopmentFee = 1;
         buyTotalFees =
             buyMarketingFee +
             buyDevelopmentFee +
             buyCommunityFundFee;
  
         sellMarketingFee = 6;
-        sellDevelopmentFee = 4;
         sellCommunityFundFee = 6;
+        sellDevelopmentFee = 4;
         sellTotalFees =
             sellMarketingFee +
-            sellDevelopmentFee +
-            sellCommunityFundFee;
+            sellCommunityFundFee +
+            sellDevelopmentFee;
  
         previousFee = sellTotalFees;
  
-        marketingWallet = address(0x3fF9d4b6D32748ffA967868Bd1F20f0bC6c3cf12); // Marketing Funds
+        marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
+        communityFundWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Community Funds
         developmentWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Dev Funds
-        communityFundWallet = address(0xae3c1E85389959a384ceD7F4d1611A7C27Ea09D8); // Community Funds
  
         excludeFromFees(owner(), true);
         excludeFromFees(address(this), true);
         excludeFromFees(deadAddress, true);
         excludeFromFees(marketingWallet, true);
-        excludeFromFees(developmentWallet, true);
         excludeFromFees(communityFundWallet, true);
+        excludeFromFees(developmentWallet, true);
  
         excludeFromMaxTransaction(owner(), true);
         excludeFromMaxTransaction(address(this), true);
         excludeFromMaxTransaction(deadAddress, true);
         excludeFromMaxTransaction(address(uniswapV2Router), true);
         excludeFromMaxTransaction(marketingWallet, true);
-        excludeFromMaxTransaction(developmentWallet, true);
         excludeFromMaxTransaction(communityFundWallet, true);
+        excludeFromMaxTransaction(developmentWallet, true);
  
         _mint(address(this), totalSupply);
     }
@@ -1370,7 +1365,7 @@ contract women is ERC20, Ownable {
             buyMarketingFee +
             buyDevelopmentFee +
             buyCommunityFundFee;
-        require(buyTotalFees <= 10, "ERC20: Must keep fees at 10% or less");
+        require(buyTotalFees <= 20, "ERC20: Must keep fees at 20% or less");
     }
  
     function updateSellFees(
@@ -1386,7 +1381,7 @@ contract women is ERC20, Ownable {
             sellDevelopmentFee +
             sellCommunityFundFee;
         previousFee = sellTotalFees;
-        require(sellTotalFees <= 10, "ERC20: Must keep fees at 10% or less");
+        require(sellTotalFees <= 20, "ERC20: Must keep fees at 20% or less");
     }
  
     function updateMarketingWallet(address _marketingWallet)
