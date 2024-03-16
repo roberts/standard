@@ -37,7 +37,11 @@ Long-term projects work best when there is clear budgeting within the token tax 
 - Marketing Wallet - Controlled by the project's CMO or marketing director
 - Developer Wallet - Controlled by the project's CTO or lead developer
 
-For project longevity, these wallets are updateable in the contract. This allows teams to use a marketing manager for launch and a different marketing manager for ongoing efforts or just for natural turnover in positions over time. You have the new team member in that role create a fresh wallet only they have control over then we update the smart contract to divert the appropriate tax revenue to that wallet.
+For project longevity, these wallets are updateable in the contract. This allows teams to use a marketing manager for launch and a different marketing manager for ongoing efforts or just for natural turnover in positions over time. You have the new team member in that role create a fresh wallet only they have control over then we update the smart contract to divert the appropriate tax revenue to that wallet. There are 3 functions to update these wallets:
+
+- updateCommunityWallet()
+- updateMarketingWallet()
+- updateDeveloperWallet()
 
 ### Withdraw Tokens
 
@@ -46,11 +50,17 @@ There are 2 functions for withdrawing tokens in the contract:
 - withdrawStuckTokens() - This function withdraws the tokens in the contract
 - withdrawStuckETH() - This function withdraws the Ethereum in the contract
 
-## Enable Trading
+### Enable Trading
 
 The following function enables trading of tokens:
 
 - enableTrading() - This function launches the Uniswap V2 Liquidity Pool with the tokens in the contract and ETH in the contract
+
+### Anti-Whale Restrictins
+
+There are 2 anti-whale restrictions used on wallets. The first is a max transaction that I have found is best to be 1% or 2% of supply. The second is a max wallet which I have found is best to be 5% of supply, allowing multiple buys. The contract has the following function to modify this:
+
+- updateRestrictions() - This function updates the max transaction and the max wallet
 
 ### Ownership
 
