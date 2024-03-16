@@ -58,9 +58,9 @@ The following function enables trading of tokens:
 
 ### Anti-Whale Restrictins
 
-There are 2 anti-whale restrictions used on wallets. The first is a max transaction that I have found is best to be 1% or 2% of supply. The second is a max wallet which I have found is best to be 5% of supply, allowing multiple buys. The contract has the following function to modify this:
+There are 2 anti-whale restrictions used on wallets. The first is a max transaction that I have found is best to be 1% or 2% of supply. The second is a max wallet which I have found is best to be 5% of supply, allowing multiple buys. These are needed for heavily marketed launches and to prevent whales accumalating at launch, especially bots. 15-30 minutes adfter launch, this should be removed with the following function:
 
-- updateRestrictions() - This function updates the max transaction and the max wallet
+- removeeRestrictions() - This function removes the max transaction and the max wallet
 
 ### Ownership
 
