@@ -13,7 +13,10 @@ I believe in the Web3 Ethos of "Don't Trust, Verify" and have been in the indust
 
 ## Contract Standard Features
 
-With every token project I have launched over the past 3 years, I test a hypothesis with the team to improve the launch & long-term success of the project. Like a scientific study, I keep all the other variables in the contract & launch strategy the same and simply isolate this hypothesis for improvement. This approach allows me to confidently learn and iterate on the best practices I have developed for project teams.
+With every token project I have launched over the past 3 years, I test a hypothesis with the team to improve the launch & long-term success of the project. Like a scientific study, I keep all the other variables in the contract & launch strategy the same and simply isolate this hypothesis for improvement. This approach allows me to confidently learn and iterate on the best practices I have developed for project teams. [View my old contract](https://github.com/roberts/standard/blob/main/old.sol). With these learnings, I have settled on the following read & write functions for the current contract standard:
+
+- [Read Functions](https://github.com/roberts/standard/blob/main/functions/read.md)
+- [Write Functions](https://github.com/roberts/standard/blob/main/functions/write.md)
 
 My contract standard contains the following features:
 
