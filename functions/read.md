@@ -10,16 +10,16 @@ On Etherscan, this is the order of functions that should return variables under 
 6) buyTax
 7) sellTax
 8) owner
-9) Community Wallet
-10) Marketing Wallet
-11) Developer Wallet
-12) Balance of Address
-13) Max Wallet
-14) Max Transaction
-15) Trading Active
-16) Swap Enabled
-17) Swap Token Amount
-18) Decimals
-19) Uniswap V2 Pair
-20) Uniswap V2 Router
-21) Dead Address
+9) communityWallet
+10) marketingWallet
+11) developerWallet
+12) balanceOfAddress
+13) maxWallet
+14) maxTransaction
+15) tradingActive
+16) swapEnabled
+17) swapTokenAmount
+18) decimals
+19) uniswapV2Pair
+20) uniswapV2Router
+21) deadAddress
