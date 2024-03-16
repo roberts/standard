@@ -26,7 +26,7 @@ I have found the optimal buy tax to be 3% for long-term projects. After many ite
 To ensure community confidence & clearly communicate what the team is able to do with the taxes, the buy and sell tax are not openly adjustable. I used to cap what they could be modified to, but find it is better to hard code just a couple options into the smart contract. There are 2 functions available to projects:
 
 - reduceSellTax() - This function reduces the 16% sell tax to 3%, matching the buy tax so the token has a 3/3 tax.
-- removeTax() - This function removes the buy and sell tax so the token has a 0/0  tax.
+- removeTax() - This function removes the buy and sell tax so the token has a 0/0 tax.
 - resetTax() - THis function resets the token back to the 3/16 lopsided tax structure.
 
 ### Tax Wallets
@@ -66,3 +66,4 @@ Here is a list of things I have seen in smart contracts for ERC-20 tokens that I
 - No Transfer Fee
 - No Whitelist
 - No Blacklist
+- No Mint
