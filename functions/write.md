@@ -1,6 +1,6 @@
 # Function Order
 
-On Etherscan, this is the order the functions should show up under "[Write Contract](https://info.etherscan.com/how-to-use-read-or-write-contract-features-on-etherscan/)" section:
+On Etherscan, this is the order of functions should show up under "[Write Contract](https://info.etherscan.com/how-to-use-read-or-write-contract-features-on-etherscan/)" section:
 
 1) enableTrading()
 2) withdrawStuckTokens()
