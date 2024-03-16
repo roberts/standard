@@ -39,9 +39,30 @@ Long-term projects work best when there is clear budgeting within the token tax 
 
 For project longevity, these wallets are updateable in the contract. This allows teams to use a marketing manager for launch and a different marketing manager for ongoing efforts or just for natural turnover in positions over time. You have the new team member in that role create a fresh wallet only they have control over then we update the smart contract to divert the appropriate tax revenue to that wallet.
 
+### Withdraw Tokens
+
+There are 2 functions for withdrawing tokens in the contract:
+
+- withdrawStuckTokens() - This function withdraws the tokens in the contract
+- withdrawStuckETH() - This function withdraws the Ethereum in the contract
+
+## Enable Trading
+
+The following function enables trading of tokens:
+
+- enableTrading() - This function launches the Uniswap V2 Liquidity Pool with the tokens in the contract and ETH in the contract
+
+### Ownership
+
+There are 2 functions for ownership in the Contract Standard:
+
+- transferOwnership() - This function transfers the contract to another Ethereum address
+- renounceOwnership() - This function sends the contract to the Dead Address
 
 ## Contract Standard Does NOT Contain
 
 Here is a list of things I have seen in smart contracts for ERC-20 tokens that I believe are not in the best long-term interest of the project's community and will not include in this contract standard. This contract standard does NOT contain the following:
 
 - No Transfer Fee
+- No Whitelist
+- No Blacklist
