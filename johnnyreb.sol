@@ -104,17 +104,17 @@ abstract contract Ownable is Context {
 }
 
 contract JohnnyReb is Ownable {
-    address payable public wallet1 =
-        payable(0xC6aa2f0FF6b8563EA418ec2558890D6027413699);
-    address payable public wallet2 =
+    address payable public SolidityWizard =
         payable(0x90923AD852f67682D9CcD437196a619F7BdF6Ae7);
-    address payable public wallet3 =
+    address payable public DrewRoberts =
+        payable(0xC6aa2f0FF6b8563EA418ec2558890D6027413699);
+    address payable public WebAppTeam =
         payable(0xC6aa2f0FF6b8563EA418ec2558890D6027413699);
 
     constructor() {}
 
-    function setWallet3(address payable _wallet3) external onlyOwner {
-        wallet3 = _wallet3;
+    function setWebAppTeamWallet(address payable _wallet) external onlyOwner {
+        WebAppTeam = _wallet;
     }
 
     function sendStuckETH() external onlyOwner {
