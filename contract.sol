@@ -1465,11 +1465,11 @@ contract new is ERC20, Ownable {
                 if (restrictionsActive) {
                     require(
                         amount <= maxTransactionAmount,
-                        "ERC20: Buy transfer amount exceeds the maxTransactionAmount."
+                        "ERC20: Transaction Amount Exceeded"
                     );
                     require(
                         amount + balanceOf(to) <= maxWallet,
-                        "ERC20: Max wallet exceeded"
+                        "ERC20: Max Wallet Exceeded"
                     );
                 }
             }
@@ -1487,7 +1487,7 @@ contract new is ERC20, Ownable {
                 if (restrictionsActive) {
                     require(
                         amount <= maxTransactionAmount,
-                        "ERC20: Sell transfer amount exceeds the maxTransactionAmount."
+                        "ERC20: Transaction Amount Exceeded"
                     );
                 }
             } else if (
