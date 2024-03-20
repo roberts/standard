@@ -1578,7 +1578,7 @@ contract new is ERC20, Ownable {
                     tokensForMarketing +=
                         (fees * sellMarketingFee) /
                         sellTotalFees;
-                    tokensForDevelopert +=
+                    tokensForDeveloper +=
                         (fees * sellDeveloperFee) /
                         sellTotalFees;
                 }
