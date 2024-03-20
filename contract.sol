@@ -1141,7 +1141,7 @@ contract new is ERC20, Ownable {
 
     IUniswapV2Router02 public immutable uniswapV2Router;
     address public uniswapV2Pair;
-    address public constant deadAddress = address(0xdead);
+    address public constant deadAddress = address(0x000000000000000000000000000000000000dEaD);
 
     string exchangeLink = "https://app.uniswap.or/swap";
     string websiteLink = "https://DrewRoberts.com";
