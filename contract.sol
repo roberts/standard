@@ -1154,7 +1154,7 @@ contract new is ERC20, Ownable {
 
     address public marketingWallet;
     address public developerWallet;
-    address public communityFundWallet;
+    address public communityWallet;
 
     uint256 public maxTransactionAmount;
     uint256 public swapTokensAtAmount;
@@ -1171,16 +1171,16 @@ contract new is ERC20, Ownable {
     uint256 public sellTotalFees;
     uint256 private sellMarketingFee;
     uint256 private sellDeveloperFee;
-    uint256 private sellCommunityFundFee;
+    uint256 private sellCommunityFee;
 
     uint256 public reducedSellTotalFees;
     uint256 private reducedSellMarketingFee;
     uint256 private reducedSellDeveloperFee;
-    uint256 private reducedSellCommunityFundFee;
+    uint256 private reducedSellCommunityFee;
 
     uint256 private tokensForMarketing;
     uint256 private tokensForDeveloper;
-    uint256 private tokensForCommunityFund;
+    uint256 private tokensForCommunity;
 
     mapping(address => bool) private automatedMarketMakerPairs;
 
@@ -1198,7 +1198,7 @@ contract new is ERC20, Ownable {
         address indexed oldWallet
     );
 
-    event communityFundWalletUpdated(
+    event communityWalletUpdated(
         address indexed newWallet,
         address indexed oldWallet
     );
@@ -1221,23 +1221,23 @@ contract new is ERC20, Ownable {
         buyTotalFees = marketingFee + developerFee + communityFee;
 
         sellMarketingFee = 6;
-        sellCommunityFundFee = 6;
+        sellCommunityFee = 6;
         sellDeveloperFee = 4;
         sellTotalFees =
             sellMarketingFee +
-            sellCommunityFundFee +
+            sellCommunityFee +
             sellDeveloperFee;
 
         reducedSellMarketingFee = 1;
-        reducedSellCommunityFundFee = 1;
+        reducedSellCommunityFee = 1;
         reducedSellDeveloperFee = 1;
         reducedSellTotalFees =
             reducedSellMarketingFee +
-            reducedSellCommunityFundFee +
+            reducedSellCommunityFee +
             reducedSellDeveloperFee;
 
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
-        communityFundWallet = address(
+        communityWallet = address(
             0xC6aa2f0FF6b8563EA418ec2558890D6027413699
         ); // Community Funds
         developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Dev Funds
@@ -1342,15 +1342,15 @@ contract new is ERC20, Ownable {
     // }
 
     /**
-     * @dev Updates the communityFundWallet address
+     * @dev Updates the communityWallet address
      */
     function updateCommunityWallet(
-        address _communityFundWallet
+        address _communityWallet
     ) external onlyOwner {
-        require(_communityFundWallet != address(0), "ERC20: Address 0");
-        address oldWallet = communityFundWallet;
-        communityFundWallet = _communityFundWallet;
-        emit communityFundWalletUpdated(communityFundWallet, oldWallet);
+        require(_communityWallet != address(0), "ERC20: Address 0");
+        address oldWallet = communityWallet;
+        communityWallet = _communityWallet;
+        emit communityWalletUpdated(communityWallet, oldWallet);
     }
 
     /**
@@ -1439,13 +1439,13 @@ contract new is ERC20, Ownable {
                         from == address(this) ||
                         from == deadAddress ||
                         from == marketingWallet ||
-                        from == communityFundWallet ||
+                        from == communityWallet ||
                         from == developerWallet ||
                         to == owner() ||
                         to == address(this) ||
                         to == deadAddress ||
                         to == marketingWallet ||
-                        to == communityFundWallet ||
+                        to == communityWallet ||
                         to == developerWallet,
                     "ERC20: Trading is not active."
                 );
@@ -1459,7 +1459,7 @@ contract new is ERC20, Ownable {
                     to == deadAddress ||
                     to == address(uniswapV2Router) ||
                     to == marketingWallet ||
-                    to == communityFundWallet ||
+                    to == communityWallet ||
                     to == developerWallet)
             ) {
                 if (restrictionsActive) {
@@ -1481,7 +1481,7 @@ contract new is ERC20, Ownable {
                     from == deadAddress ||
                     from == address(uniswapV2Router) ||
                     from == marketingWallet ||
-                    from == communityFundWallet ||
+                    from == communityWallet ||
                     from == developerWallet)
             ) {
                 if (restrictionsActive) {
@@ -1496,7 +1496,7 @@ contract new is ERC20, Ownable {
                 to != deadAddress &&
                 to != address(uniswapV2Router) &&
                 to != marketingWallet &&
-                to != communityFundWallet &&
+                to != communityWallet &&
                 to != developerWallet
             ) {
                 require(
@@ -1519,13 +1519,13 @@ contract new is ERC20, Ownable {
             from != address(this) &&
             from != deadAddress &&
             from != marketingWallet &&
-            from != communityFundWallet &&
+            from != communityWallet &&
             from != developerWallet &&
             to != owner() &&
             to != address(this) &&
             to != deadAddress &&
             to != marketingWallet &&
-            to != communityFundWallet &&
+            to != communityWallet &&
             to != developerWallet
         ) {
             swapping = true;
@@ -1542,13 +1542,13 @@ contract new is ERC20, Ownable {
             from == address(this) ||
             from == deadAddress ||
             from == marketingWallet ||
-            from == communityFundWallet ||
+            from == communityWallet ||
             from == developerWallet ||
             to == owner() ||
             to == address(this) ||
             to == deadAddress ||
             to == marketingWallet ||
-            to == communityFundWallet ||
+            to == communityWallet ||
             to == developerWallet
         ) {
             takeFee = false;
@@ -1561,8 +1561,8 @@ contract new is ERC20, Ownable {
             if (automatedMarketMakerPairs[to] && taxEnabled) {
                 if (reducedSellTax) {
                     fees = amount.mul(reducedSellTotalFees).div(100);
-                    tokensForCommunityFund +=
-                        (fees * reducedSellCommunityFundFee) /
+                    tokensForCommunity +=
+                        (fees * reducedSellCommunityFee) /
                         reducedSellTotalFees;
                     tokensForMarketing +=
                         (fees * reducedSellMarketingFee) /
@@ -1572,8 +1572,8 @@ contract new is ERC20, Ownable {
                         reducedSellTotalFees;
                 } else {
                     fees = amount.mul(sellTotalFees).div(100);
-                    tokensForCommunityFund +=
-                        (fees * sellCommunityFundFee) /
+                    tokensForCommunity +=
+                        (fees * sellCommunityFee) /
                         sellTotalFees;
                     tokensForMarketing +=
                         (fees * sellMarketingFee) /
@@ -1586,7 +1586,7 @@ contract new is ERC20, Ownable {
             // on buy
             else if (automatedMarketMakerPairs[from] && taxEnabled) {
                 fees = amount.mul(buyTotalFees).div(100);
-                tokensForCommunityFund += (fees * communityFee) / buyTotalFees;
+                tokensForCommunity += (fees * communityFee) / buyTotalFees;
                 tokensForMarketing += (fees * marketingFee) / buyTotalFees;
                 tokensForDeveloper += (fees * developerFee) / buyTotalFees;
             }
@@ -1622,11 +1622,11 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @dev Helper function that sends the ETH from the contract to the marketingWallet, developerWallet and communityFundWallet
+     * @dev Helper function that sends the ETH from the contract to the marketingWallet, developerWallet and communityWallet
      */
     function swapBack() private {
         uint256 contractBalance = balanceOf(address(this));
-        uint256 totalTokensToSwap = tokensForCommunityFund +
+        uint256 totalTokensToSwap = tokensForCommunity +
             tokensForMarketing +
             tokensForDeveloper;
         bool success;
@@ -1647,16 +1647,16 @@ contract new is ERC20, Ownable {
             totalTokensToSwap
         );
 
-        uint256 ethForCommunityFund = ethBalance
-            .mul(tokensForCommunityFund)
+        uint256 ethForCommunity = ethBalance
+            .mul(tokensForCommunity)
             .div(totalTokensToSwap);
 
         tokensForMarketing = 0;
         tokensForDeveloper = 0;
-        tokensForCommunityFund = 0;
+        tokensForCommunity = 0;
 
-        (success, ) = address(communityFundWallet).call{
-            value: ethForCommunityFund
+        (success, ) = address(communityWallet).call{
+            value: ethForCommunity
         }("");
 
         (success, ) = address(developerWallet).call{value: ethForDeveloper}(
