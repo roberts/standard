@@ -1136,7 +1136,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
 
-contract new is ERC20, Ownable {
+contract fresh is ERC20, Ownable {
     using SafeMath for uint256;
 
     IUniswapV2Router02 public immutable uniswapV2Router;
@@ -1203,7 +1203,7 @@ contract new is ERC20, Ownable {
         address indexed oldWallet
     );
 
-    constructor() ERC20("My New Contract Standard", "NEW") {
+    constructor() ERC20("Drew Roberts Contract Standard", "FRESH") {
         uniswapV2Router = IUniswapV2Router02(
             0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
         );
