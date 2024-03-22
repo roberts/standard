@@ -20,7 +20,7 @@ pragma experimental ABIEncoderV2;
 // pragma solidity ^0.8.0;
 
 /**
- * @DrewRoberts Note: Provides information about the current execution context, including the
+ * @dev Provides information about the current execution context, including the
  * sender of the transaction and its data. While these are generally available
  * via msg.sender and msg.data, they should not be accessed in such a direct
  * manner, since when dealing with meta-transactions the account sending and
@@ -46,7 +46,7 @@ abstract contract Context {
 // import "../utils/Context.sol";
 
 /**
- * @DrewRoberts Note: Contract module which provides a basic access control mechanism, where
+ * @dev Contract module which provides a basic access control mechanism, where
  * there is an account (an owner) that can be granted exclusive access to
  * specific functions.
  *
@@ -66,14 +66,14 @@ abstract contract Ownable is Context {
     );
 
     /**
-     * @DrewRoberts Note: Initializes the contract setting the deployer as the initial owner.
+     * @dev Initializes the contract setting the deployer as the initial owner.
      */
     constructor() {
         _transferOwnership(_msgSender());
     }
 
     /**
-     * @DrewRoberts Note: Throws if called by any account other than the owner.
+     * @dev Throws if called by any account other than the owner.
      */
     modifier onlyOwner() {
         _checkOwner();
@@ -81,21 +81,21 @@ abstract contract Ownable is Context {
     }
 
     /**
-     * @DrewRoberts Note: Returns the address of the current owner.
+     * @dev Returns the address of the current owner.
      */
     function owner() public view virtual returns (address) {
         return _owner;
     }
 
     /**
-     * @DrewRoberts Note: Throws if the sender is not the owner.
+     * @dev Throws if the sender is not the owner.
      */
     function _checkOwner() internal view virtual {
         require(owner() == _msgSender(), "Ownable: caller is not the owner");
     }
 
     /**
-     * @DrewRoberts Note: Leaves the contract without owner. It will not be possible to call
+     * @dev Leaves the contract without owner. It will not be possible to call
      * `onlyOwner` functions. Can only be called by the current owner.
      *
      * NOTE: Renouncing ownership will leave the contract without an owner,
@@ -106,7 +106,7 @@ abstract contract Ownable is Context {
     }
 
     /**
-     * @DrewRoberts Note: Transfers ownership of the contract to a new account (`newOwner`).
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Can only be called by the current owner.
      */
     function transferOwnership(address newOwner) public virtual onlyOwner {
@@ -118,7 +118,7 @@ abstract contract Ownable is Context {
     }
 
     /**
-     * @DrewRoberts Note: Transfers ownership of the contract to a new account (`newOwner`).
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Internal function without access restriction.
      */
     function _transferOwnership(address newOwner) internal virtual {
@@ -133,11 +133,11 @@ abstract contract Ownable is Context {
 // pragma solidity ^0.8.0;
 
 /**
- * @DrewRoberts Note: Interface of the ERC20 standard as defined in the EIP.
+ * @dev Interface of the ERC20 standard as defined in the EIP.
  */
 interface IERC20 {
     /**
-     * @DrewRoberts Note: Emitted when `value` tokens are moved from one account (`from`) to
+     * @dev Emitted when `value` tokens are moved from one account (`from`) to
      * another (`to`).
      *
      * Note that `value` may be zero.
@@ -145,7 +145,7 @@ interface IERC20 {
     event Transfer(address indexed from, address indexed to, uint256 value);
 
     /**
-     * @DrewRoberts Note: Emitted when the allowance of a `spender` for an `owner` is set by
+     * @dev Emitted when the allowance of a `spender` for an `owner` is set by
      * a call to {approve}. `value` is the new allowance.
      */
     event Approval(
@@ -155,17 +155,17 @@ interface IERC20 {
     );
 
     /**
-     * @DrewRoberts Note: Returns the amount of tokens in existence.
+     * @dev Returns the amount of tokens in existence.
      */
     function totalSupply() external view returns (uint256);
 
     /**
-     * @DrewRoberts Note: Returns the amount of tokens owned by `account`.
+     * @dev Returns the amount of tokens owned by `account`.
      */
     function balanceOf(address account) external view returns (uint256);
 
     /**
-     * @DrewRoberts Note: Moves `amount` tokens from the caller's account to `to`.
+     * @dev Moves `amount` tokens from the caller's account to `to`.
      *
      * Returns a boolean value indicating whether the operation succeeded.
      *
@@ -174,7 +174,7 @@ interface IERC20 {
     function transfer(address to, uint256 amount) external returns (bool);
 
     /**
-     * @DrewRoberts Note: Returns the remaining number of tokens that `spender` will be
+     * @dev Returns the remaining number of tokens that `spender` will be
      * allowed to spend on behalf of `owner` through {transferFrom}. This is
      * zero by default.
      *
@@ -186,7 +186,7 @@ interface IERC20 {
     ) external view returns (uint256);
 
     /**
-     * @DrewRoberts Note: Sets `amount` as the allowance of `spender` over the caller's tokens.
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
      *
      * Returns a boolean value indicating whether the operation succeeded.
      *
@@ -202,7 +202,7 @@ interface IERC20 {
     function approve(address spender, uint256 amount) external returns (bool);
 
     /**
-     * @DrewRoberts Note: Moves `amount` tokens from `from` to `to` using the
+     * @dev Moves `amount` tokens from `from` to `to` using the
      * allowance mechanism. `amount` is then deducted from the caller's
      * allowance.
      *
@@ -224,23 +224,23 @@ interface IERC20 {
 // import "../IERC20.sol";
 
 /**
- * @DrewRoberts Note: Interface for the optional metadata functions from the ERC20 standard.
+ * @dev Interface for the optional metadata functions from the ERC20 standard.
  *
  * _Available since v4.1._
  */
 interface IERC20Metadata is IERC20 {
     /**
-     * @DrewRoberts Note: Returns the name of the token.
+     * @dev Returns the name of the token.
      */
     function name() external view returns (string memory);
 
     /**
-     * @DrewRoberts Note: Returns the symbol of the token.
+     * @dev Returns the symbol of the token.
      */
     function symbol() external view returns (string memory);
 
     /**
-     * @DrewRoberts Note: Returns the decimals places of the token.
+     * @dev Returns the decimals places of the token.
      */
     function decimals() external view returns (uint8);
 }
@@ -254,7 +254,7 @@ interface IERC20Metadata is IERC20 {
 // import "../../utils/Context.sol";
 
 /**
- * @DrewRoberts Note: Implementation of the {IERC20} interface.
+ * @dev Implementation of the {IERC20} interface.
  *
  * This implementation is agnostic to the way tokens are created. This means
  * that a supply mechanism has to be added in a derived contract using {_mint}.
@@ -292,7 +292,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     string private _symbol;
 
     /**
-     * @DrewRoberts Note: Sets the values for {name} and {symbol}.
+     * @dev Sets the values for {name} and {symbol}.
      *
      * All two of these values are immutable: they can only be set once during
      * construction.
@@ -303,14 +303,14 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Returns the name of the token.
+     * @dev Returns the name of the token.
      */
     function name() public view virtual override returns (string memory) {
         return _name;
     }
 
     /**
-     * @DrewRoberts Note: Returns the symbol of the token, usually a shorter version of the
+     * @dev Returns the symbol of the token, usually a shorter version of the
      * name.
      */
     function symbol() public view virtual override returns (string memory) {
@@ -318,7 +318,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Returns the number of decimals used to get its user representation.
+     * @dev Returns the number of decimals used to get its user representation.
      * For example, if `decimals` equals `2`, a balance of `505` tokens should
      * be displayed to a user as `5.05` (`505 / 10 ** 2`).
      *
@@ -334,14 +334,14 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         return 18;
     }
     /**
-     * @DrewRoberts Note: See {IERC20-totalSupply}.
+     * @dev See {IERC20-totalSupply}.
      */
     function totalSupply() public view virtual override returns (uint256) {
         return _totalSupply;
     }
 
     /**
-     * @DrewRoberts Note: See {IERC20-balanceOf}.
+     * @dev See {IERC20-balanceOf}.
      */
     function balanceOf(
         address account
@@ -350,7 +350,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: See {IERC20-transfer}.
+     * @dev See {IERC20-transfer}.
      *
      * Requirements:
      *
@@ -367,7 +367,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: See {IERC20-allowance}.
+     * @dev See {IERC20-allowance}.
      */
     function allowance(
         address owner,
@@ -377,7 +377,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: See {IERC20-approve}.
+     * @dev See {IERC20-approve}.
      *
      * NOTE: If `amount` is the maximum `uint256`, the allowance is not updated on
      * `transferFrom`. This is semantically equivalent to an infinite approval.
@@ -396,7 +396,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: See {IERC20-transferFrom}.
+     * @dev See {IERC20-transferFrom}.
      *
      * Emits an {Approval} event indicating the updated allowance. This is not
      * required by the EIP. See the note at the beginning of {ERC20}.
@@ -423,7 +423,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Atomically increases the allowance granted to `spender` by the caller.
+     * @dev Atomically increases the allowance granted to `spender` by the caller.
      *
      * This is an alternative to {approve} that can be used as a mitigation for
      * problems described in {IERC20-approve}.
@@ -444,7 +444,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Atomically decreases the allowance granted to `spender` by the caller.
+     * @dev Atomically decreases the allowance granted to `spender` by the caller.
      *
      * This is an alternative to {approve} that can be used as a mitigation for
      * problems described in {IERC20-approve}.
@@ -475,7 +475,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Moves `amount` of tokens from `from` to `to`.
+     * @dev Moves `amount` of tokens from `from` to `to`.
      *
      * This internal function is equivalent to {transfer}, and can be used to
      * e.g. implement automatic token fees, slashing mechanisms, etc.
@@ -515,7 +515,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
         _afterTokenTransfer(from, to, amount);
     }
 
-    /** @DrewRoberts Note: Creates `amount` tokens and assigns them to `account`, increasing
+    /** @dev Creates `amount` tokens and assigns them to `account`, increasing
      * the total supply.
      *
      * Emits a {Transfer} event with `from` set to the zero address.
@@ -540,7 +540,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Destroys `amount` tokens from `account`, reducing the
+     * @dev Destroys `amount` tokens from `account`, reducing the
      * total supply.
      *
      * Emits a {Transfer} event with `to` set to the zero address.
@@ -569,7 +569,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Sets `amount` as the allowance of `spender` over the `owner` s tokens.
+     * @dev Sets `amount` as the allowance of `spender` over the `owner` s tokens.
      *
      * This internal function is equivalent to `approve`, and can be used to
      * e.g. set automatic allowances for certain subsystems, etc.
@@ -594,7 +594,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Updates `owner` s allowance for `spender` based on spent `amount`.
+     * @dev Updates `owner` s allowance for `spender` based on spent `amount`.
      *
      * Does not update the allowance amount in case of infinite allowance.
      * Revert if not enough allowance is available.
@@ -619,7 +619,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     }
 
     /**
-     * @DrewRoberts Note: Hook that is called before any transfer of tokens. This includes
+     * @dev Hook that is called before any transfer of tokens. This includes
      * minting and burning.
      *
      * Calling conditions:
@@ -639,7 +639,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     ) internal virtual {}
 
     /**
-     * @DrewRoberts Note: Hook that is called after any transfer of tokens. This includes
+     * @dev Hook that is called after any transfer of tokens. This includes
      * minting and burning.
      *
      * Calling conditions:
@@ -668,14 +668,14 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 // because it relies on the compiler's built in overflow checks.
 
 /**
- * @DrewRoberts Note: Wrappers over Solidity's arithmetic operations.
+ * @dev Wrappers over Solidity's arithmetic operations.
  *
  * NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler
  * now has built in overflow checking.
  */
 library SafeMath {
     /**
-     * @DrewRoberts Note: Returns the addition of two unsigned integers, with an overflow flag.
+     * @dev Returns the addition of two unsigned integers, with an overflow flag.
      *
      * _Available since v3.4._
      */
@@ -691,7 +691,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the subtraction of two unsigned integers, with an overflow flag.
+     * @dev Returns the subtraction of two unsigned integers, with an overflow flag.
      *
      * _Available since v3.4._
      */
@@ -706,7 +706,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the multiplication of two unsigned integers, with an overflow flag.
+     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.
      *
      * _Available since v3.4._
      */
@@ -726,7 +726,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the division of two unsigned integers, with a division by zero flag.
+     * @dev Returns the division of two unsigned integers, with a division by zero flag.
      *
      * _Available since v3.4._
      */
@@ -741,7 +741,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the remainder of dividing two unsigned integers, with a division by zero flag.
+     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.
      *
      * _Available since v3.4._
      */
@@ -756,7 +756,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the addition of two unsigned integers, reverting on
+     * @dev Returns the addition of two unsigned integers, reverting on
      * overflow.
      *
      * Counterpart to Solidity's `+` operator.
@@ -770,7 +770,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the subtraction of two unsigned integers, reverting on
+     * @dev Returns the subtraction of two unsigned integers, reverting on
      * overflow (when the result is negative).
      *
      * Counterpart to Solidity's `-` operator.
@@ -784,7 +784,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the multiplication of two unsigned integers, reverting on
+     * @dev Returns the multiplication of two unsigned integers, reverting on
      * overflow.
      *
      * Counterpart to Solidity's `*` operator.
@@ -798,7 +798,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the integer division of two unsigned integers, reverting on
+     * @dev Returns the integer division of two unsigned integers, reverting on
      * division by zero. The result is rounded towards zero.
      *
      * Counterpart to Solidity's `/` operator.
@@ -812,7 +812,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
+     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
      * reverting when dividing by zero.
      *
      * Counterpart to Solidity's `%` operator. This function uses a `revert`
@@ -828,7 +828,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the subtraction of two unsigned integers, reverting with custom message on
+     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on
      * overflow (when the result is negative).
      *
      * CAUTION: This function is deprecated because it requires allocating memory for the error
@@ -852,7 +852,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the integer division of two unsigned integers, reverting with custom message on
+     * @dev Returns the integer division of two unsigned integers, reverting with custom message on
      * division by zero. The result is rounded towards zero.
      *
      * Counterpart to Solidity's `/` operator. Note: this function uses a
@@ -875,7 +875,7 @@ library SafeMath {
     }
 
     /**
-     * @DrewRoberts Note: Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
+     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
      * reverting with custom message when dividing by zero.
      *
      * CAUTION: This function is deprecated because it requires allocating memory for the error
@@ -1248,7 +1248,7 @@ contract new is ERC20, Ownable {
     receive() external payable {}
 
     /**
-     * @DrewRoberts Note: Enables trading, creates a uniswap pair and adds liquidity using the tokens in the contract.
+     * @dev Enables trading, creates a uniswap pair and adds liquidity using the tokens in the contract.
      *
      * sets traindingActive to true, it can never be set to false after that
      * sets swapEnabled to true, enabling automatic swaps once swapTokensAtAmount is reached
@@ -1286,21 +1286,21 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Updates the exchangeLink string with a new value
+     * @dev Updates the exchangeLink string with a new value
      */
     function updateExchangeLink(string calldata newLink) external onlyOwner {
         exchangeLink = newLink;
     }
 
     /**
-     * @DrewRoberts Note: Updates the websiteLink string with a new value
+     * @dev Updates the websiteLink string with a new value
      */
     function updateWebsiteLink(string calldata newLink) external onlyOwner {
         websiteLink = newLink;
     }
 
     /**
-     * @DrewRoberts Note: Updates the threshold at which the tokens in the contract are automatically swapped for ETH
+     * @dev Updates the threshold at which the tokens in the contract are automatically swapped for ETH
      */
     function updateSwapTokenAmount(
         uint256 newAmount
@@ -1318,7 +1318,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Updates the marketingWallet address
+     * @dev Updates the marketingWallet address
      */
     function updateMarketingWallet(
         address _marketingWallet
@@ -1330,7 +1330,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Updates the developerWallet address
+     * @dev Updates the developerWallet address
      */
     // function updateDeveloperWallet(
     //     address _developerWallet
@@ -1342,7 +1342,7 @@ contract new is ERC20, Ownable {
     // }
 
     /**
-     * @DrewRoberts Note: Updates the communityWallet address
+     * @dev Updates the communityWallet address
      */
     function updateCommunityWallet(
         address _communityWallet
@@ -1354,7 +1354,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: removes the max transaction and max wallet restrictions
+     * @dev removes the max transaction and max wallet restrictions
      * this cannot be reversed
      */
     function removeRestrictions() external onlyOwner {
@@ -1362,28 +1362,28 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Resets the tax to 3% buy and 16% sell
+     * @dev Resets the tax to 3% buy and 16% sell
      */
     function resetTax() external onlyOwner {
         reducedSellTax = false;
     }
 
     /**
-     * @DrewRoberts Note: Sets the sell tax to 3%
+     * @dev Sets the sell tax to 3%
      */
     function reduceSellTax() external onlyOwner {
         reducedSellTax = true;
     }
 
     /**
-     * @DrewRoberts Note: Sets the buy and sell fees to 0%
+     * @dev Sets the buy and sell fees to 0%
      */
     function removeTax() external onlyOwner {
         taxEnabled = false;
     }
 
     /**
-     * @DrewRoberts Note: Sends any remaining ETH in the contract that wasn't automatically swapped to the owner
+     * @dev Sends any remaining ETH in the contract that wasn't automatically swapped to the owner
      */
     function withdrawStuckETH() public onlyOwner {
         bool success;
@@ -1393,7 +1393,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Sends any remaining tokens in the contract to the owner
+     * @dev Sends any remaining tokens in the contract to the owner
      */
     function withdrawStuckTokens(address tkn) public onlyOwner {
         require(IERC20(tkn).balanceOf(address(this)) > 0, "No tokens");
@@ -1402,7 +1402,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: stores the address of the automated market maker pair
+     * @dev stores the address of the automated market maker pair
      */
     function _setAutomatedMarketMakerPair(address pair, bool value) private {
         automatedMarketMakerPairs[pair] = value;
@@ -1411,7 +1411,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Transfer function
+     * @dev Transfer function
      */
     function _transfer(
         address from,
@@ -1602,7 +1602,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Helper function that swaps tokens in the contract for ETH
+     * @dev Helper function that swaps tokens in the contract for ETH
      */
     function swapTokensForEth(uint256 tokenAmount) private {
         address[] memory path = new address[](2);
@@ -1622,7 +1622,7 @@ contract new is ERC20, Ownable {
     }
 
     /**
-     * @DrewRoberts Note: Helper function that sends the ETH from the contract to the marketingWallet, developerWallet and communityWallet
+     * @dev Helper function that sends the ETH from the contract to the marketingWallet, developerWallet and communityWallet
      */
     function swapBack() private {
         uint256 contractBalance = balanceOf(address(this));
