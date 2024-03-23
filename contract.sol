@@ -1152,13 +1152,13 @@ contract fresh is ERC20, Ownable {
     bool public taxation = true;
     bool public taxLopsided = false;
 
+    address public communityWallet;
     address public marketingWallet;
     address public developerWallet;
-    address public communityWallet;
 
-    uint256 public maxTransactionAmount;
-    uint256 public swapTokensAtAmount;
+    uint256 public maxTransaction;
     uint256 public maxWallet;
+    uint256 public swapTokensAtAmount;
 
     bool public tradingActive = false;
     bool public swapEnabled = false;
@@ -1207,7 +1207,7 @@ contract fresh is ERC20, Ownable {
 
         uint256 totalSupply = 100_000_000 ether;
 
-        maxTransactionAmount = (totalSupply) / 50; // 2% of total supply (2,000,000 tokens)
+        maxTransaction = (totalSupply) / 100; // 1% of total supply (1,000,000 tokens)
         maxWallet = (totalSupply) / 20; // 5% of total supply (5,000,000 tokens)
         swapTokensAtAmount = (totalSupply * 5) / 10000;
 
@@ -1449,7 +1449,7 @@ contract fresh is ERC20, Ownable {
             ) {
                 if (restrictionsActive) {
                     require(
-                        amount <= maxTransactionAmount,
+                        amount <= maxTransaction,
                         "ERC20: Transaction Amount Exceeded"
                     );
                     require(
@@ -1471,7 +1471,7 @@ contract fresh is ERC20, Ownable {
             ) {
                 if (restrictionsActive) {
                     require(
-                        amount <= maxTransactionAmount,
+                        amount <= maxTransaction,
                         "ERC20: Transaction Amount Exceeded"
                     );
                 }
