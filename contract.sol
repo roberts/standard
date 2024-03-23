@@ -1254,7 +1254,7 @@ contract fresh is ERC20, Ownable {
         _setAutomatedMarketMakerPair(address(uniswapV2Pair), true);
 
         uint256 tokensInWallet = balanceOf(address(this));
-        uint256 tokensToAdd = (tokensInWallet * 100) / 100; // 100% of tokens in wallet go to LP
+        uint256 tokensToAdd = (tokensInWallet * 100) / 100; // 100% of tokens in contract go to Liquidity Pool to be paired with ETH in contract
 
         uniswapV2Router.addLiquidityETH{value: address(this).balance}(
             address(this),
