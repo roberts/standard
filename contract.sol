@@ -1164,6 +1164,7 @@ contract fresh is ERC20, Ownable {
     bool public swapEnabled = false;
 
     uint256 public totalBuyTax;
+    uint256 public totalReducedSellTax;
     uint256 private marketingTax;
     uint256 private developerTax;
     uint256 private communityTax;
@@ -1172,11 +1173,6 @@ contract fresh is ERC20, Ownable {
     uint256 private marketingSellTax;
     uint256 private developerSellTax;
     uint256 private communitySellTax;
-
-    uint256 public totalReducedSellTax;
-    uint256 private marketingReducedSellTax;
-    uint256 private developerReducedSellTax;
-    uint256 private communityReducedSellTax;
 
     uint256 private tokensForMarketing;
     uint256 private tokensForDeveloper;
@@ -1219,6 +1215,7 @@ contract fresh is ERC20, Ownable {
         communityTax = 1;
         developerTax = 1;
         totalBuyTax = marketingTax + developerTax + communityTax;
+        totalReducedSellTax = marketingTax + developerTax + communityTax;
 
         marketingSellTax = 6;
         communitySellTax = 6;
@@ -1227,14 +1224,6 @@ contract fresh is ERC20, Ownable {
             marketingSellTax +
             communitySellTax +
             developerSellTax;
-
-        marketingReducedSellTax = 1;
-        communityReducedSellTax = 1;
-        developerReducedSellTax = 1;
-        totalReducedSellTax =
-            marketingReducedSellTax +
-            communityReducedSellTax +
-            developerReducedSellTax;
 
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
         communityWallet = address(
@@ -1563,13 +1552,13 @@ contract fresh is ERC20, Ownable {
                 if (taxReduced) {
                     fees = amount.mul(totalReducedSellTax).div(100);
                     tokensForCommunity +=
-                        (fees * communityReducedSellTax) /
+                        (fees * communityTax) /
                         totalReducedSellTax;
                     tokensForMarketing +=
-                        (fees * marketingReducedSellTax) /
+                        (fees * marketingTax) /
                         totalReducedSellTax;
                     tokensForDeveloper +=
-                        (fees * developerReducedSellTax) /
+                        (fees * developerTax) /
                         totalReducedSellTax;
                 } else {
                     fees = amount.mul(totalSellTax).div(100);
