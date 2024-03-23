@@ -22,7 +22,7 @@ My contract standard contains the following features:
 
 ### Lopsided Tax Structure
 
-I have found the optimal buy tax to be 3% for long-term projects. After many iterations of testing lopsided tax structures, I have found 16% to be the optimal sell tax.
+I have found the optimal buy & sell tax to be 3% for long-term projects. After many iterations of testing lopsided tax structures, I have found 16% to be the optimal high sell tax.
 
 ### Restrict Modifiable Tax
 

@@ -3,11 +3,11 @@
  *
    Contract features:
    100,000,000 tokens
-   3% buy tax in ETH sent to marketing, community & dev
-   16% sell tax in ETH sent to marketing, community & dev
-   Removable max transaction & max wallet limits
+   3% buy tax in ETH sent to community, marketing & developer
+   16% sell tax in ETH sent to community, marketing, & developer
    Option to reduce taxes to 3/3
    Option to remove taxes
+   Removable anti-whale restrictions for max transaction & max wallet
  */
 
 // SPDX-License-Identifier: MIT
@@ -1146,47 +1146,47 @@ contract fresh is ERC20, Ownable {
     string exchangeLink = "https://app.uniswap.or/swap";
     string websiteLink = "https://DrewRoberts.com";
 
-    bool private swapping;
-    bool public restrictionsActive = true;
-
-    bool public taxEnabled = true;
-    bool public reducedSellTax = false;
-
+    address public communityWallet;
     address public marketingWallet;
     address public developerWallet;
-    address public communityWallet;
 
-    uint256 public maxTransactionAmount;
-    uint256 public swapTokensAtAmount;
-    uint256 public maxWallet;
+    bool public tradable = false;
+    bool public swappable = false;
+    bool private swapping;
+    uint256 public swapTokenAmount;
 
-    bool public tradingActive = false;
-    bool public swapEnabled = false;
+    bool public restrictions = true;
+    uint256 public restrictMaxTransaction;
+    uint256 public restrictMaxWallet;
 
-    uint256 public buyTotalFees;
-    uint256 private marketingFee;
-    uint256 private developerFee;
-    uint256 private communityFee;
+    bool public taxation = true;
+    bool public taxLopsided = true;
 
-    uint256 public sellTotalFees;
-    uint256 private sellMarketingFee;
-    uint256 private sellDeveloperFee;
-    uint256 private sellCommunityFee;
+    uint256 public totalBuyTax;
+    uint256 public totalSellTax;
+    uint256 private communityTax;
+    uint256 private marketingTax;
+    uint256 private developerTax;
 
-    uint256 public reducedSellTotalFees;
-    uint256 private reducedSellMarketingFee;
-    uint256 private reducedSellDeveloperFee;
-    uint256 private reducedSellCommunityFee;
+    uint256 public totalLopsidedSellTax;
+    uint256 private communityLopsidedSellTax;
+    uint256 private marketingLopsidedSellTax;
+    uint256 private developerLopsidedSellTax;
 
-    uint256 private tokensForMarketing;
-    uint256 private tokensForDeveloper;
-    uint256 private tokensForCommunity;
+    uint256 private communityTokens;
+    uint256 private marketingTokens;
+    uint256 private developerTokens;
 
     mapping(address => bool) private automatedMarketMakerPairs;
 
     event ExcludeFromFees(address indexed account, bool isExcluded);
 
     event SetAutomatedMarketMakerPair(address indexed pair, bool indexed value);
+
+    event communityWalletUpdated(
+        address indexed newWallet,
+        address indexed oldWallet
+    );
 
     event marketingWalletUpdated(
         address indexed newWallet,
@@ -1198,49 +1198,31 @@ contract fresh is ERC20, Ownable {
         address indexed oldWallet
     );
 
-    event communityWalletUpdated(
-        address indexed newWallet,
-        address indexed oldWallet
-    );
-
     constructor() ERC20("Drew Roberts Contract Standard", "FRESH") {
-        uniswapV2Router = IUniswapV2Router02(
-            0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
-        );
+        uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
         _approve(address(this), address(uniswapV2Router), type(uint256).max);
 
         uint256 totalSupply = 100_000_000 ether;
 
-        maxTransactionAmount = (totalSupply) / 50; // 2% of total supply (2,000,000 tokens)
-        maxWallet = (totalSupply) / 20; // 5% of total supply (5,000,000 tokens)
-        swapTokensAtAmount = (totalSupply * 5) / 10000;
+        swapTokenAmount = totalSupply / 2000; // 0.05% of total supply (50,000 tokens)
 
-        marketingFee = 1;
-        communityFee = 1;
-        developerFee = 1;
-        buyTotalFees = marketingFee + developerFee + communityFee;
+        restrictMaxTransaction = totalSupply / 100; // 1% of total supply (1,000,000 tokens)
+        restrictMaxWallet = totalSupply / 20; // 5% of total supply (5,000,000 tokens)
 
-        sellMarketingFee = 6;
-        sellCommunityFee = 6;
-        sellDeveloperFee = 4;
-        sellTotalFees =
-            sellMarketingFee +
-            sellCommunityFee +
-            sellDeveloperFee;
+        communityTax = 1;
+        marketingTax = 1;
+        developerTax = 1;
+        totalBuyTax = communityTax + marketingTax + developerTax;
+        totalSellTax = communityTax + marketingTax + developerTax;
 
-        reducedSellMarketingFee = 1;
-        reducedSellCommunityFee = 1;
-        reducedSellDeveloperFee = 1;
-        reducedSellTotalFees =
-            reducedSellMarketingFee +
-            reducedSellCommunityFee +
-            reducedSellDeveloperFee;
+        communityLopsidedSellTax = 6;
+        marketingLopsidedSellTax = 6;
+        developerLopsidedSellTax = 4;
+        totalLopsidedSellTax = communityLopsidedSellTax + marketingLopsidedSellTax + developerLopsidedSellTax;
 
+        communityWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Community Funds
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
-        communityWallet = address(
-            0xC6aa2f0FF6b8563EA418ec2558890D6027413699
-        ); // Community Funds
-        developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Dev Funds
+        developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Developer Funds
 
         _mint(address(this), totalSupply);
     }
@@ -1250,12 +1232,12 @@ contract fresh is ERC20, Ownable {
     /**
      * @dev Enables trading, creates a uniswap pair and adds liquidity using the tokens in the contract.
      *
-     * sets traindingActive to true, it can never be set to false after that
-     * sets swapEnabled to true, enabling automatic swaps once swapTokensAtAmount is reached
+     * sets tradable to true, it can never be set to false after that
+     * sets swappable to true, enabling automatic swaps once swapTokenAmount is reached
      * stores uniswap pair address in uniswapV2Pair
      */
     function enableTrading() external onlyOwner {
-        require(!tradingActive, "Trading already active.");
+        require(!tradable, "Trading already enabled.");
 
         uniswapV2Pair = IUniswapV2Factory(uniswapV2Router.factory()).createPair(
             address(this),
@@ -1270,7 +1252,7 @@ contract fresh is ERC20, Ownable {
         _setAutomatedMarketMakerPair(address(uniswapV2Pair), true);
 
         uint256 tokensInWallet = balanceOf(address(this));
-        uint256 tokensToAdd = (tokensInWallet * 100) / 100; // 100% of tokens in wallet go to LP
+        uint256 tokensToAdd = (tokensInWallet * 100) / 100; // 100% of tokens in contract go to Liquidity Pool to be paired with ETH in contract
 
         uniswapV2Router.addLiquidityETH{value: address(this).balance}(
             address(this),
@@ -1281,8 +1263,8 @@ contract fresh is ERC20, Ownable {
             block.timestamp
         );
 
-        tradingActive = true;
-        swapEnabled = true;
+        tradable = true;
+        swappable = true;
     }
 
     /**
@@ -1313,8 +1295,20 @@ contract fresh is ERC20, Ownable {
             newAmount <= (totalSupply() * 5) / 1000,
             "ERC20: Swap amount cannot be higher than 0.5% total supply."
         );
-        swapTokensAtAmount = newAmount;
+        swapTokenAmount = newAmount;
         return true;
+    }
+
+    /**
+     * @dev Updates the communityWallet address
+     */
+    function updateCommunityWallet(
+        address _communityWallet
+    ) external onlyOwner {
+        require(_communityWallet != address(0), "ERC20: Address 0");
+        address oldWallet = communityWallet;
+        communityWallet = _communityWallet;
+        emit communityWalletUpdated(communityWallet, oldWallet);
     }
 
     /**
@@ -1342,44 +1336,33 @@ contract fresh is ERC20, Ownable {
     // }
 
     /**
-     * @dev Updates the communityWallet address
-     */
-    function updateCommunityWallet(
-        address _communityWallet
-    ) external onlyOwner {
-        require(_communityWallet != address(0), "ERC20: Address 0");
-        address oldWallet = communityWallet;
-        communityWallet = _communityWallet;
-        emit communityWalletUpdated(communityWallet, oldWallet);
-    }
-
-    /**
      * @dev removes the max transaction and max wallet restrictions
      * this cannot be reversed
      */
     function removeRestrictions() external onlyOwner {
-        restrictionsActive = false;
+        restrictions = false;
     }
 
     /**
      * @dev Resets the tax to 3% buy and 16% sell
      */
     function resetTax() external onlyOwner {
-        reducedSellTax = false;
+        taxation = true;
+        taxLopsided = true;
     }
 
     /**
      * @dev Sets the sell tax to 3%
      */
     function reduceSellTax() external onlyOwner {
-        reducedSellTax = true;
+        taxLopsided = false;
     }
 
     /**
      * @dev Sets the buy and sell fees to 0%
      */
     function removeTax() external onlyOwner {
-        taxEnabled = false;
+        taxation = false;
     }
 
     /**
@@ -1433,21 +1416,21 @@ contract fresh is ERC20, Ownable {
             to != deadAddress &&
             !swapping
         ) {
-            if (!tradingActive) {
+            if (!tradable) {
                 require(
                     from == owner() ||
                         from == address(this) ||
                         from == deadAddress ||
-                        from == marketingWallet ||
                         from == communityWallet ||
+                        from == marketingWallet ||
                         from == developerWallet ||
                         to == owner() ||
                         to == address(this) ||
                         to == deadAddress ||
-                        to == marketingWallet ||
                         to == communityWallet ||
+                        to == marketingWallet ||
                         to == developerWallet,
-                    "ERC20: Trading is not active."
+                    "ERC20: Token Trading Not Enabled. Be Patient Anon."
                 );
             }
 
@@ -1458,17 +1441,17 @@ contract fresh is ERC20, Ownable {
                     to == address(this) ||
                     to == deadAddress ||
                     to == address(uniswapV2Router) ||
-                    to == marketingWallet ||
                     to == communityWallet ||
+                    to == marketingWallet ||
                     to == developerWallet)
             ) {
-                if (restrictionsActive) {
+                if (restrictions) {
                     require(
-                        amount <= maxTransactionAmount,
-                        "ERC20: Transaction Amount Exceeded"
+                        amount <= restrictMaxTransaction,
+                        "ERC20: Max Transaction Exceeded"
                     );
                     require(
-                        amount + balanceOf(to) <= maxWallet,
+                        amount + balanceOf(to) <= restrictMaxWallet,
                         "ERC20: Max Wallet Exceeded"
                     );
                 }
@@ -1480,14 +1463,14 @@ contract fresh is ERC20, Ownable {
                     from == address(this) ||
                     from == deadAddress ||
                     from == address(uniswapV2Router) ||
-                    from == marketingWallet ||
                     from == communityWallet ||
+                    from == marketingWallet ||
                     from == developerWallet)
             ) {
-                if (restrictionsActive) {
+                if (restrictions) {
                     require(
-                        amount <= maxTransactionAmount,
-                        "ERC20: Transaction Amount Exceeded"
+                        amount <= restrictMaxTransaction,
+                        "ERC20: Max Transaction Exceeded"
                     );
                 }
             } else if (
@@ -1495,100 +1478,88 @@ contract fresh is ERC20, Ownable {
                 to != address(this) &&
                 to != deadAddress &&
                 to != address(uniswapV2Router) &&
-                to != marketingWallet &&
                 to != communityWallet &&
+                to != marketingWallet &&
                 to != developerWallet
             ) {
                 require(
-                    amount + balanceOf(to) <= maxWallet,
-                    "ERC20: Max wallet exceeded"
+                    amount + balanceOf(to) <= restrictMaxWallet,
+                    "ERC20: Max Wallet Exceeded"
                 );
             }
         }
 
         uint256 contractTokenBalance = balanceOf(address(this));
 
-        bool canSwap = contractTokenBalance >= swapTokensAtAmount;
+        bool canSwap = contractTokenBalance >= swapTokenAmount;
 
         if (
             canSwap &&
-            swapEnabled &&
+            swappable &&
             !swapping &&
             !automatedMarketMakerPairs[from] &&
             from != owner() &&
             from != address(this) &&
             from != deadAddress &&
-            from != marketingWallet &&
             from != communityWallet &&
+            from != marketingWallet &&
             from != developerWallet &&
             to != owner() &&
             to != address(this) &&
             to != deadAddress &&
-            to != marketingWallet &&
             to != communityWallet &&
+            to != marketingWallet &&
             to != developerWallet
         ) {
             swapping = true;
 
-            swapBack();
+            distributeTax();
 
             swapping = false;
         }
 
-        bool takeFee = !swapping;
+        bool taxed = !swapping;
 
         if (
             from == owner() ||
             from == address(this) ||
             from == deadAddress ||
-            from == marketingWallet ||
             from == communityWallet ||
+            from == marketingWallet ||
             from == developerWallet ||
             to == owner() ||
             to == address(this) ||
             to == deadAddress ||
-            to == marketingWallet ||
             to == communityWallet ||
+            to == marketingWallet ||
             to == developerWallet
         ) {
-            takeFee = false;
+            taxed = false;
         }
 
         uint256 fees = 0;
 
-        if (takeFee) {
-            // on sell
-            if (automatedMarketMakerPairs[to] && taxEnabled) {
-                if (reducedSellTax) {
-                    fees = amount.mul(reducedSellTotalFees).div(100);
-                    tokensForCommunity +=
-                        (fees * reducedSellCommunityFee) /
-                        reducedSellTotalFees;
-                    tokensForMarketing +=
-                        (fees * reducedSellMarketingFee) /
-                        reducedSellTotalFees;
-                    tokensForDeveloper +=
-                        (fees * reducedSellDeveloperFee) /
-                        reducedSellTotalFees;
+        if (taxed) {
+            // Collect Sell Tax
+            if (automatedMarketMakerPairs[to] && taxation) {
+                if (taxLopsided) {
+                    fees = amount.mul(totalLopsidedSellTax).div(100);
+                    communityTokens += (fees * communityLopsidedSellTax) / totalLopsidedSellTax;
+                    marketingTokens += (fees * marketingLopsidedSellTax) / totalLopsidedSellTax;
+                    developerTokens += (fees * developerLopsidedSellTax) / totalLopsidedSellTax;
                 } else {
-                    fees = amount.mul(sellTotalFees).div(100);
-                    tokensForCommunity +=
-                        (fees * sellCommunityFee) /
-                        sellTotalFees;
-                    tokensForMarketing +=
-                        (fees * sellMarketingFee) /
-                        sellTotalFees;
-                    tokensForDeveloper +=
-                        (fees * sellDeveloperFee) /
-                        sellTotalFees;
+                    fees = amount.mul(totalSellTax).div(100);
+                    communityTokens += (fees * communityTax) / totalSellTax;
+                    marketingTokens += (fees * marketingTax) / totalSellTax;
+                    developerTokens += (fees * developerTax) / totalSellTax;
                 }
             }
-            // on buy
-            else if (automatedMarketMakerPairs[from] && taxEnabled) {
-                fees = amount.mul(buyTotalFees).div(100);
-                tokensForCommunity += (fees * communityFee) / buyTotalFees;
-                tokensForMarketing += (fees * marketingFee) / buyTotalFees;
-                tokensForDeveloper += (fees * developerFee) / buyTotalFees;
+            // Collect Buy Tax
+            else if (automatedMarketMakerPairs[from] && taxation) {
+                fees = amount.mul(totalBuyTax).div(100);
+                communityTokens += (fees * communityTax) / totalBuyTax;
+                marketingTokens += (fees * marketingTax) / totalBuyTax;
+                developerTokens += (fees * developerTax) / totalBuyTax;
             }
 
             if (fees > 0) {
@@ -1622,49 +1593,34 @@ contract fresh is ERC20, Ownable {
     }
 
     /**
-     * @dev Helper function that sends the ETH from the contract to the marketingWallet, developerWallet and communityWallet
+     * @dev Helper function that sends the ETH from the contract to the communityWallet, marketingWallet & developerWallet
      */
-    function swapBack() private {
+    function distributeTax() private {
         uint256 contractBalance = balanceOf(address(this));
-        uint256 totalTokensToSwap = tokensForCommunity +
-            tokensForMarketing +
-            tokensForDeveloper;
+        uint256 totalTokensToSwap = communityTokens + marketingTokens + developerTokens;
         bool success;
 
         if (contractBalance == 0 || totalTokensToSwap == 0) {
             return;
         }
 
-        if (contractBalance > swapTokensAtAmount * 20) {
-            contractBalance = swapTokensAtAmount * 20;
+        if (contractBalance > swapTokenAmount * 20) {
+            contractBalance = swapTokenAmount * 20;
         }
 
         swapTokensForEth(contractBalance);
 
         uint256 ethBalance = address(this).balance;
 
-        uint256 ethForDeveloper = ethBalance.mul(tokensForDeveloper).div(
-            totalTokensToSwap
-        );
+        uint256 ethForCommunity = ethBalance.mul(communityTokens).div(totalTokensToSwap);
+        uint256 ethForDeveloper = ethBalance.mul(developerTokens).div(totalTokensToSwap);
 
-        uint256 ethForCommunity = ethBalance
-            .mul(tokensForCommunity)
-            .div(totalTokensToSwap);
+        communityTokens = 0;
+        marketingTokens = 0;
+        developerTokens = 0;
 
-        tokensForMarketing = 0;
-        tokensForDeveloper = 0;
-        tokensForCommunity = 0;
-
-        (success, ) = address(communityWallet).call{
-            value: ethForCommunity
-        }("");
-
-        (success, ) = address(developerWallet).call{value: ethForDeveloper}(
-            ""
-        );
-
-        (success, ) = address(marketingWallet).call{
-            value: address(this).balance
-        }("");
+        (success, ) = address(communityWallet).call{value: ethForCommunity}("");
+        (success, ) = address(marketingWallet).call{value: address(this).balance}("");
+        (success, ) = address(developerWallet).call{value: ethForDeveloper}("");
     }
 }
