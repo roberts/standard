@@ -1150,7 +1150,7 @@ contract fresh is ERC20, Ownable {
     address public marketingWallet;
     address public developerWallet;
 
-    bool public tradingActive = false;
+    bool public tradable = false;
     bool public swapEnabled = false;
     bool private swapping;
     uint256 public swapTokensAtAmount;
@@ -1239,7 +1239,7 @@ contract fresh is ERC20, Ownable {
      * stores uniswap pair address in uniswapV2Pair
      */
     function enableTrading() external onlyOwner {
-        require(!tradingActive, "Trading already active.");
+        require(!tradable, "Trading already enabled.");
 
         uniswapV2Pair = IUniswapV2Factory(uniswapV2Router.factory()).createPair(
             address(this),
@@ -1265,7 +1265,7 @@ contract fresh is ERC20, Ownable {
             block.timestamp
         );
 
-        tradingActive = true;
+        tradable = true;
         swapEnabled = true;
     }
 
@@ -1418,7 +1418,7 @@ contract fresh is ERC20, Ownable {
             to != deadAddress &&
             !swapping
         ) {
-            if (!tradingActive) {
+            if (!tradable) {
                 require(
                     from == owner() ||
                         from == address(this) ||
@@ -1432,7 +1432,7 @@ contract fresh is ERC20, Ownable {
                         to == communityWallet ||
                         to == marketingWallet ||
                         to == developerWallet,
-                    "ERC20: Trading is not active."
+                    "ERC20: Token Trading Not Enabled. Be Patient Anon."
                 );
             }
 
