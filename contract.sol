@@ -1365,6 +1365,7 @@ contract fresh is ERC20, Ownable {
      * @dev Resets the tax to 3% buy and 16% sell
      */
     function resetTax() external onlyOwner {
+        taxation = true;
         taxReduced = false;
     }
 
