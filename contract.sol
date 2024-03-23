@@ -1164,15 +1164,15 @@ contract fresh is ERC20, Ownable {
     bool public swapEnabled = false;
 
     uint256 public totalBuyTax;
-    uint256 public totalReducedSellTax;
+    uint256 public totalSellTax;
     uint256 private marketingTax;
     uint256 private developerTax;
     uint256 private communityTax;
 
-    uint256 public totalSellTax;
-    uint256 private marketingSellTax;
-    uint256 private developerSellTax;
-    uint256 private communitySellTax;
+    uint256 public totalHighSellTax;
+    uint256 private marketingHighSellTax;
+    uint256 private developerHighSellTax;
+    uint256 private communityHighSellTax;
 
     uint256 private tokensForMarketing;
     uint256 private tokensForDeveloper;
@@ -1215,15 +1215,12 @@ contract fresh is ERC20, Ownable {
         communityTax = 1;
         developerTax = 1;
         totalBuyTax = marketingTax + developerTax + communityTax;
-        totalReducedSellTax = marketingTax + developerTax + communityTax;
+        totalSellTax = marketingTax + developerTax + communityTax;
 
-        marketingSellTax = 6;
-        communitySellTax = 6;
-        developerSellTax = 4;
-        totalSellTax =
-            marketingSellTax +
-            communitySellTax +
-            developerSellTax;
+        marketingHighSellTax = 6;
+        communityHighSellTax = 6;
+        developerHighSellTax = 4;
+        totalHighSellTax = marketingHighSellTax + communityHighSellTax + developerHighSellTax;
 
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
         communityWallet = address(
@@ -1550,27 +1547,27 @@ contract fresh is ERC20, Ownable {
             // Collect Sell Tax
             if (automatedMarketMakerPairs[to] && taxation) {
                 if (taxReduced) {
-                    fees = amount.mul(totalReducedSellTax).div(100);
-                    tokensForCommunity +=
-                        (fees * communityTax) /
-                        totalReducedSellTax;
-                    tokensForMarketing +=
-                        (fees * marketingTax) /
-                        totalReducedSellTax;
-                    tokensForDeveloper +=
-                        (fees * developerTax) /
-                        totalReducedSellTax;
-                } else {
                     fees = amount.mul(totalSellTax).div(100);
                     tokensForCommunity +=
-                        (fees * communitySellTax) /
+                        (fees * communityTax) /
                         totalSellTax;
                     tokensForMarketing +=
-                        (fees * marketingSellTax) /
+                        (fees * marketingTax) /
                         totalSellTax;
                     tokensForDeveloper +=
-                        (fees * developerSellTax) /
+                        (fees * developerTax) /
                         totalSellTax;
+                } else {
+                    fees = amount.mul(totalHighSellTax).div(100);
+                    tokensForCommunity +=
+                        (fees * communityHighSellTax) /
+                        totalHighSellTax;
+                    tokensForMarketing +=
+                        (fees * marketingHighSellTax) /
+                        totalHighSellTax;
+                    tokensForDeveloper +=
+                        (fees * developerHighSellTax) /
+                        totalHighSellTax;
                 }
             }
             // Collect Buy Tax
