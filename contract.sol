@@ -1450,7 +1450,7 @@ contract fresh is ERC20, Ownable {
                 if (restrictionsActive) {
                     require(
                         amount <= maxTransaction,
-                        "ERC20: Transaction Amount Exceeded"
+                        "ERC20: Max Transaction Exceeded"
                     );
                     require(
                         amount + balanceOf(to) <= maxWallet,
@@ -1472,7 +1472,7 @@ contract fresh is ERC20, Ownable {
                 if (restrictionsActive) {
                     require(
                         amount <= maxTransaction,
-                        "ERC20: Transaction Amount Exceeded"
+                        "ERC20: Max Transaction Exceeded"
                     );
                 }
             } else if (
@@ -1486,7 +1486,7 @@ contract fresh is ERC20, Ownable {
             ) {
                 require(
                     amount + balanceOf(to) <= maxWallet,
-                    "ERC20: Max wallet exceeded"
+                    "ERC20: Max Wallet Exceeded"
                 );
             }
         }
