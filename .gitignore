@@ -1,5 +1,5 @@
 /vendor/
-node_modules/
+node_modules
 npm-debug.log
 yarn-error.log
 
@@ -21,3 +21,15 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+
+# Hardhat files
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
