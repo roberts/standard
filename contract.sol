@@ -1153,7 +1153,7 @@ contract fresh is ERC20, Ownable {
     bool public tradable = false;
     bool public swappable = false;
     bool private swapping;
-    uint256 public swapTokensAtAmount;
+    uint256 public swapTokenAmount;
 
     bool public restrictions = true;
     uint256 public restrictMaxTransaction;
@@ -1204,7 +1204,7 @@ contract fresh is ERC20, Ownable {
 
         uint256 totalSupply = 100_000_000 ether;
 
-        swapTokensAtAmount = totalSupply / 2000; // 0.05% of total supply (50,000 tokens)
+        swapTokenAmount = totalSupply / 2000; // 0.05% of total supply (50,000 tokens)
 
         restrictMaxTransaction = totalSupply / 100; // 1% of total supply (1,000,000 tokens)
         restrictMaxWallet = totalSupply / 20; // 5% of total supply (5,000,000 tokens)
@@ -1233,7 +1233,7 @@ contract fresh is ERC20, Ownable {
      * @dev Enables trading, creates a uniswap pair and adds liquidity using the tokens in the contract.
      *
      * sets tradable to true, it can never be set to false after that
-     * sets swappable to true, enabling automatic swaps once swapTokensAtAmount is reached
+     * sets swappable to true, enabling automatic swaps once swapTokenAmount is reached
      * stores uniswap pair address in uniswapV2Pair
      */
     function enableTrading() external onlyOwner {
@@ -1295,7 +1295,7 @@ contract fresh is ERC20, Ownable {
             newAmount <= (totalSupply() * 5) / 1000,
             "ERC20: Swap amount cannot be higher than 0.5% total supply."
         );
-        swapTokensAtAmount = newAmount;
+        swapTokenAmount = newAmount;
         return true;
     }
 
@@ -1491,7 +1491,7 @@ contract fresh is ERC20, Ownable {
 
         uint256 contractTokenBalance = balanceOf(address(this));
 
-        bool canSwap = contractTokenBalance >= swapTokensAtAmount;
+        bool canSwap = contractTokenBalance >= swapTokenAmount;
 
         if (
             canSwap &&
@@ -1604,8 +1604,8 @@ contract fresh is ERC20, Ownable {
             return;
         }
 
-        if (contractBalance > swapTokensAtAmount * 20) {
-            contractBalance = swapTokensAtAmount * 20;
+        if (contractBalance > swapTokenAmount * 20) {
+            contractBalance = swapTokenAmount * 20;
         }
 
         swapTokensForEth(contractBalance);
