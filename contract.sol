@@ -1149,7 +1149,7 @@ contract fresh is ERC20, Ownable {
     bool private swapping;
     bool public restrictionsActive = true;
 
-    bool public taxEnabled = true;
+    bool public taxation = true;
     bool public reducedSellTax = false;
 
     address public marketingWallet;
@@ -1379,7 +1379,7 @@ contract fresh is ERC20, Ownable {
      * @dev Sets the buy and sell fees to 0%
      */
     function removeTax() external onlyOwner {
-        taxEnabled = false;
+        taxation = false;
     }
 
     /**
@@ -1558,7 +1558,7 @@ contract fresh is ERC20, Ownable {
 
         if (taxed) {
             // on sell
-            if (automatedMarketMakerPairs[to] && taxEnabled) {
+            if (automatedMarketMakerPairs[to] && taxation) {
                 if (reducedSellTax) {
                     fees = amount.mul(reducedSellTotalFees).div(100);
                     tokensForCommunity +=
@@ -1584,7 +1584,7 @@ contract fresh is ERC20, Ownable {
                 }
             }
             // on buy
-            else if (automatedMarketMakerPairs[from] && taxEnabled) {
+            else if (automatedMarketMakerPairs[from] && taxation) {
                 fees = amount.mul(buyTotalFees).div(100);
                 tokensForCommunity += (fees * communityFee) / buyTotalFees;
                 tokensForMarketing += (fees * marketingFee) / buyTotalFees;
