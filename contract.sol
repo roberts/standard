@@ -1150,7 +1150,7 @@ contract fresh is ERC20, Ownable {
     bool public restrictionsActive = true;
 
     bool public taxation = true;
-    bool public taxReduced = false;
+    bool public taxLopsided = false;
 
     address public marketingWallet;
     address public developerWallet;
@@ -1211,22 +1211,20 @@ contract fresh is ERC20, Ownable {
         maxWallet = (totalSupply) / 20; // 5% of total supply (5,000,000 tokens)
         swapTokensAtAmount = (totalSupply * 5) / 10000;
 
-        marketingTax = 1;
         communityTax = 1;
+        marketingTax = 1;
         developerTax = 1;
-        totalBuyTax = marketingTax + developerTax + communityTax;
-        totalSellTax = marketingTax + developerTax + communityTax;
+        totalBuyTax = communityTax + marketingTax + developerTax;
+        totalSellTax = communityTax + marketingTax + developerTax;
 
-        marketingHighSellTax = 6;
         communityHighSellTax = 6;
+        marketingHighSellTax = 6;
         developerHighSellTax = 4;
-        totalHighSellTax = marketingHighSellTax + communityHighSellTax + developerHighSellTax;
+        totalHighSellTax = communityHighSellTax + marketingHighSellTax + developerHighSellTax;
 
+        communityWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Community Funds
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
-        communityWallet = address(
-            0xC6aa2f0FF6b8563EA418ec2558890D6027413699
-        ); // Community Funds
-        developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Dev Funds
+        developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Developer Funds
 
         _mint(address(this), totalSupply);
     }
@@ -1352,14 +1350,14 @@ contract fresh is ERC20, Ownable {
      */
     function resetTax() external onlyOwner {
         taxation = true;
-        taxReduced = false;
+        taxLopsided = true;
     }
 
     /**
      * @dev Sets the sell tax to 3%
      */
     function reduceSellTax() external onlyOwner {
-        taxReduced = true;
+        taxLopsided = false;
     }
 
     /**
@@ -1546,28 +1544,16 @@ contract fresh is ERC20, Ownable {
         if (taxed) {
             // Collect Sell Tax
             if (automatedMarketMakerPairs[to] && taxation) {
-                if (taxReduced) {
-                    fees = amount.mul(totalSellTax).div(100);
-                    tokensForCommunity +=
-                        (fees * communityTax) /
-                        totalSellTax;
-                    tokensForMarketing +=
-                        (fees * marketingTax) /
-                        totalSellTax;
-                    tokensForDeveloper +=
-                        (fees * developerTax) /
-                        totalSellTax;
-                } else {
+                if (taxLopsided) {
                     fees = amount.mul(totalHighSellTax).div(100);
-                    tokensForCommunity +=
-                        (fees * communityHighSellTax) /
-                        totalHighSellTax;
-                    tokensForMarketing +=
-                        (fees * marketingHighSellTax) /
-                        totalHighSellTax;
-                    tokensForDeveloper +=
-                        (fees * developerHighSellTax) /
-                        totalHighSellTax;
+                    tokensForCommunity += (fees * communityHighSellTax) / totalHighSellTax;
+                    tokensForMarketing += (fees * marketingHighSellTax) / totalHighSellTax;
+                    tokensForDeveloper += (fees * developerHighSellTax) / totalHighSellTax;
+                } else {
+                    fees = amount.mul(totalSellTax).div(100);
+                    tokensForCommunity += (fees * communityTax) / totalSellTax;
+                    tokensForMarketing += (fees * marketingTax) / totalSellTax;
+                    tokensForDeveloper += (fees * developerTax) / totalSellTax;
                 }
             }
             // Collect Buy Tax
