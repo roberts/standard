@@ -1147,7 +1147,7 @@ contract fresh is ERC20, Ownable {
     string websiteLink = "https://DrewRoberts.com";
 
     bool private swapping;
-    bool public restrictionsActive = true;
+    bool public restrictions = true;
 
     bool public taxation = true;
     bool public taxLopsided = false;
@@ -1342,7 +1342,7 @@ contract fresh is ERC20, Ownable {
      * this cannot be reversed
      */
     function removeRestrictions() external onlyOwner {
-        restrictionsActive = false;
+        restrictions = false;
     }
 
     /**
@@ -1447,7 +1447,7 @@ contract fresh is ERC20, Ownable {
                     to == marketingWallet ||
                     to == developerWallet)
             ) {
-                if (restrictionsActive) {
+                if (restrictions) {
                     require(
                         amount <= maxTransaction,
                         "ERC20: Max Transaction Exceeded"
@@ -1469,7 +1469,7 @@ contract fresh is ERC20, Ownable {
                     from == marketingWallet ||
                     from == developerWallet)
             ) {
-                if (restrictionsActive) {
+                if (restrictions) {
                     require(
                         amount <= maxTransaction,
                         "ERC20: Max Transaction Exceeded"
