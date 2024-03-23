@@ -1151,7 +1151,7 @@ contract fresh is ERC20, Ownable {
     address public developerWallet;
 
     bool public tradable = false;
-    bool public swapEnabled = false;
+    bool public swappable = false;
     bool private swapping;
     uint256 public swapTokensAtAmount;
 
@@ -1199,17 +1199,15 @@ contract fresh is ERC20, Ownable {
     );
 
     constructor() ERC20("Drew Roberts Contract Standard", "FRESH") {
-        uniswapV2Router = IUniswapV2Router02(
-            0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
-        );
+        uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
         _approve(address(this), address(uniswapV2Router), type(uint256).max);
 
         uint256 totalSupply = 100_000_000 ether;
 
-        swapTokensAtAmount = (totalSupply * 5) / 10000;
+        swapTokensAtAmount = totalSupply / 2000; // 0.05% of total supply (50,000 tokens)
 
-        restrictMaxTransaction = (totalSupply) / 100; // 1% of total supply (1,000,000 tokens)
-        restrictMaxWallet = (totalSupply) / 20; // 5% of total supply (5,000,000 tokens)
+        restrictMaxTransaction = totalSupply / 100; // 1% of total supply (1,000,000 tokens)
+        restrictMaxWallet = totalSupply / 20; // 5% of total supply (5,000,000 tokens)
 
         communityTax = 1;
         marketingTax = 1;
@@ -1234,8 +1232,8 @@ contract fresh is ERC20, Ownable {
     /**
      * @dev Enables trading, creates a uniswap pair and adds liquidity using the tokens in the contract.
      *
-     * sets traindingActive to true, it can never be set to false after that
-     * sets swapEnabled to true, enabling automatic swaps once swapTokensAtAmount is reached
+     * sets tradable to true, it can never be set to false after that
+     * sets swappable to true, enabling automatic swaps once swapTokensAtAmount is reached
      * stores uniswap pair address in uniswapV2Pair
      */
     function enableTrading() external onlyOwner {
@@ -1266,7 +1264,7 @@ contract fresh is ERC20, Ownable {
         );
 
         tradable = true;
-        swapEnabled = true;
+        swappable = true;
     }
 
     /**
@@ -1497,7 +1495,7 @@ contract fresh is ERC20, Ownable {
 
         if (
             canSwap &&
-            swapEnabled &&
+            swappable &&
             !swapping &&
             !automatedMarketMakerPairs[from] &&
             from != owner() &&
