@@ -1164,9 +1164,9 @@ contract fresh is ERC20, Ownable {
     bool public swapEnabled = false;
 
     uint256 public totalBuyTax;
-    uint256 private marketingFee;
-    uint256 private developerFee;
-    uint256 private communityFee;
+    uint256 private marketingTax;
+    uint256 private developerTax;
+    uint256 private communityTax;
 
     uint256 public totalSellTax;
     uint256 private marketingSellTax;
@@ -1215,10 +1215,10 @@ contract fresh is ERC20, Ownable {
         maxWallet = (totalSupply) / 20; // 5% of total supply (5,000,000 tokens)
         swapTokensAtAmount = (totalSupply * 5) / 10000;
 
-        marketingFee = 1;
-        communityFee = 1;
-        developerFee = 1;
-        totalBuyTax = marketingFee + developerFee + communityFee;
+        marketingTax = 1;
+        communityTax = 1;
+        developerTax = 1;
+        totalBuyTax = marketingTax + developerTax + communityTax;
 
         marketingSellTax = 6;
         communitySellTax = 6;
@@ -1587,9 +1587,9 @@ contract fresh is ERC20, Ownable {
             // Collect Buy Tax
             else if (automatedMarketMakerPairs[from] && taxation) {
                 fees = amount.mul(totalBuyTax).div(100);
-                tokensForCommunity += (fees * communityFee) / totalBuyTax;
-                tokensForMarketing += (fees * marketingFee) / totalBuyTax;
-                tokensForDeveloper += (fees * developerFee) / totalBuyTax;
+                tokensForCommunity += (fees * communityTax) / totalBuyTax;
+                tokensForMarketing += (fees * marketingTax) / totalBuyTax;
+                tokensForDeveloper += (fees * developerTax) / totalBuyTax;
             }
 
             if (fees > 0) {
