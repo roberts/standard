@@ -1146,22 +1146,21 @@ contract fresh is ERC20, Ownable {
     string exchangeLink = "https://app.uniswap.or/swap";
     string websiteLink = "https://DrewRoberts.com";
 
-    bool private swapping;
-    bool public restrictions = true;
-
-    bool public taxation = true;
-    bool public taxLopsided = false;
-
     address public communityWallet;
     address public marketingWallet;
     address public developerWallet;
 
-    uint256 public maxTransaction;
-    uint256 public maxWallet;
-    uint256 public swapTokensAtAmount;
-
     bool public tradingActive = false;
     bool public swapEnabled = false;
+    bool private swapping;
+    uint256 public swapTokensAtAmount;
+
+    bool public restrictions = true;
+    uint256 public restrictMaxTransaction;
+    uint256 public restrictMaxWallet;
+
+    bool public taxation = true;
+    bool public taxLopsided = true;
 
     uint256 public totalBuyTax;
     uint256 public totalSellTax;
@@ -1207,9 +1206,10 @@ contract fresh is ERC20, Ownable {
 
         uint256 totalSupply = 100_000_000 ether;
 
-        maxTransaction = (totalSupply) / 100; // 1% of total supply (1,000,000 tokens)
-        maxWallet = (totalSupply) / 20; // 5% of total supply (5,000,000 tokens)
         swapTokensAtAmount = (totalSupply * 5) / 10000;
+
+        restrictMaxTransaction = (totalSupply) / 100; // 1% of total supply (1,000,000 tokens)
+        restrictMaxWallet = (totalSupply) / 20; // 5% of total supply (5,000,000 tokens)
 
         communityTax = 1;
         marketingTax = 1;
@@ -1449,11 +1449,11 @@ contract fresh is ERC20, Ownable {
             ) {
                 if (restrictions) {
                     require(
-                        amount <= maxTransaction,
+                        amount <= restrictMaxTransaction,
                         "ERC20: Max Transaction Exceeded"
                     );
                     require(
-                        amount + balanceOf(to) <= maxWallet,
+                        amount + balanceOf(to) <= restrictMaxWallet,
                         "ERC20: Max Wallet Exceeded"
                     );
                 }
@@ -1471,7 +1471,7 @@ contract fresh is ERC20, Ownable {
             ) {
                 if (restrictions) {
                     require(
-                        amount <= maxTransaction,
+                        amount <= restrictMaxTransaction,
                         "ERC20: Max Transaction Exceeded"
                     );
                 }
@@ -1485,7 +1485,7 @@ contract fresh is ERC20, Ownable {
                 to != developerWallet
             ) {
                 require(
-                    amount + balanceOf(to) <= maxWallet,
+                    amount + balanceOf(to) <= restrictMaxWallet,
                     "ERC20: Max Wallet Exceeded"
                 );
             }
