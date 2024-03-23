@@ -1169,10 +1169,10 @@ contract fresh is ERC20, Ownable {
     uint256 private developerTax;
     uint256 private communityTax;
 
-    uint256 public totalHighSellTax;
-    uint256 private marketingHighSellTax;
-    uint256 private developerHighSellTax;
-    uint256 private communityHighSellTax;
+    uint256 public totalLopsidedSellTax;
+    uint256 private marketingLopsidedSellTax;
+    uint256 private developerLopsidedSellTax;
+    uint256 private communityLopsidedSellTax;
 
     uint256 private tokensForMarketing;
     uint256 private tokensForDeveloper;
@@ -1217,10 +1217,10 @@ contract fresh is ERC20, Ownable {
         totalBuyTax = communityTax + marketingTax + developerTax;
         totalSellTax = communityTax + marketingTax + developerTax;
 
-        communityHighSellTax = 6;
-        marketingHighSellTax = 6;
-        developerHighSellTax = 4;
-        totalHighSellTax = communityHighSellTax + marketingHighSellTax + developerHighSellTax;
+        communityLopsidedSellTax = 6;
+        marketingLopsidedSellTax = 6;
+        developerLopsidedSellTax = 4;
+        totalLopsidedSellTax = communityLopsidedSellTax + marketingLopsidedSellTax + developerLopsidedSellTax;
 
         communityWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Community Funds
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
@@ -1545,10 +1545,10 @@ contract fresh is ERC20, Ownable {
             // Collect Sell Tax
             if (automatedMarketMakerPairs[to] && taxation) {
                 if (taxLopsided) {
-                    fees = amount.mul(totalHighSellTax).div(100);
-                    tokensForCommunity += (fees * communityHighSellTax) / totalHighSellTax;
-                    tokensForMarketing += (fees * marketingHighSellTax) / totalHighSellTax;
-                    tokensForDeveloper += (fees * developerHighSellTax) / totalHighSellTax;
+                    fees = amount.mul(totalLopsidedSellTax).div(100);
+                    tokensForCommunity += (fees * communityLopsidedSellTax) / totalLopsidedSellTax;
+                    tokensForMarketing += (fees * marketingLopsidedSellTax) / totalLopsidedSellTax;
+                    tokensForDeveloper += (fees * developerLopsidedSellTax) / totalLopsidedSellTax;
                 } else {
                     fees = amount.mul(totalSellTax).div(100);
                     tokensForCommunity += (fees * communityTax) / totalSellTax;
