@@ -1,6 +1,6 @@
 # Drew Roberts Contract Standard
 
-This repository is for updating & explaining the features of my Contract Standard for ERC-20 Tokens. The contract is designed for optimizing performance of long-term Ethereum token projects on Mainnet or a Layer 2. It removes all concern from token holders of nefarious behavior as there are no functions even available that could be misused by the project. The ultimate goal is to encourage transaction volume at launch and subsequent accumalation of tokens into the hands of long-term supporters of the project, fostering a strong community.
+This repository is for updating & explaining the features of my Contract Standard for ERC-20 Tokens. The contract is designed for optimizing performance of long-term Ethereum token projects on Mainnet or a Layer 2. It removes all concern from token holders of nefarious behavior as there are no functions even available that could be misused by the project. The ultimate goal is to encourage transaction volume at launch and subsequent accumulation of tokens into the hands of long-term supporters of the project, fostering a strong community.
 
 I believe in the Web3 Ethos of "Don't Trust, Verify" and have been in the industry for over a decade and will remain for decades to come. As such, creating long-term relationships with project founders and their teams is of utmost importance to me. I value transparency & creating a Win-Win Situation for all parties, especially token holders. If I am the developer of a project, you can expect the following commitment from me and the team.
 
@@ -22,15 +22,15 @@ My contract standard contains the following features:
 
 ### Lopsided Tax Structure
 
-I have found the optimal buy & sell tax to be 3% for long-term projects. After many iterations of testing lopsided tax structures, I have found 16% to be the optimal high sell tax.
+Through many experiments with tokenomics, I have found that optimal performance for long-term token projects is achieved through a 3/16 lopsided tax structure. It is important to have the option to reduce the lopsided sell tax for a stable 3/3 tax token and another option to remove taxes altogether.
 
 ### Restrict Modifiable Tax
 
-To ensure community confidence & clearly communicate what the team is able to do with the taxes, the buy and sell tax are not openly adjustable. I used to cap what they could be modified to, but find it is better to hard code just a couple options into the smart contract. There are 2 functions available to projects:
+To ensure community confidence & clearly communicate tax policy, the buy & sell taxes are not openly adjustable. I used to cap what they could be modified to, but find it is better to hard code just a couple options into the smart contract. The following tax functions are available to projects using this contract standard:
 
 - reduceSellTax() - This function reduces the 16% sell tax to 3%, matching the buy tax so the token has a 3/3 tax.
 - removeTax() - This function removes the buy and sell tax so the token has a 0/0 tax.
-- resetTax() - THis function resets the token back to the 3/16 lopsided tax structure.
+- resetTax() - This function resets the token back to the 3/16 lopsided tax structure.
 
 ### Tax Wallets
 
@@ -57,11 +57,11 @@ There are 2 functions for withdrawing tokens in the contract:
 
 The following function enables trading of tokens:
 
-- enableTrading() - This function launches the Uniswap V2 Liquidity Pool with the tokens in the contract and ETH in the contract
+- enableTrading() - This function launches the Uniswap V2 Liquidity Pool with the tokens & ETH in the contract
 
 ### Anti-Whale Restrictins
 
-There are 2 anti-whale restrictions used on wallets. The first is a max transaction that I have found is best to be 1% or 2% of supply. The second is a max wallet which I have found is best to be 5% of supply, allowing multiple buys. These are needed for heavily marketed launches and to prevent whales accumalating at launch, especially bots. 15-30 minutes adfter launch, this should be removed with the following function:
+There are 2 anti-whale restrictions in this contract standard. The first is a max transaction that I have found is best to be 2% or less of the total supply. The second is a max wallet which I have found is best to be 5% of the total supply, allowing multiple buys. These are necessary for heavily marketed launches and to prevent whales accumulating at launch, especially bots. 15-30 minutes after launch, this should be removed with the following function:
 
 - removeRestrictions() - This function removes the max transaction and the max wallet
 
