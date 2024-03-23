@@ -1535,7 +1535,7 @@ contract fresh is ERC20, Ownable {
             swapping = false;
         }
 
-        bool takeFee = !swapping;
+        bool taxed = !swapping;
 
         if (
             from == owner() ||
@@ -1551,12 +1551,12 @@ contract fresh is ERC20, Ownable {
             to == communityWallet ||
             to == developerWallet
         ) {
-            takeFee = false;
+            taxed = false;
         }
 
         uint256 fees = 0;
 
-        if (takeFee) {
+        if (taxed) {
             // on sell
             if (automatedMarketMakerPairs[to] && taxEnabled) {
                 if (reducedSellTax) {
