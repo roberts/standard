@@ -1169,9 +1169,9 @@ contract fresh is ERC20, Ownable {
     uint256 private communityFee;
 
     uint256 public totalSellTax;
-    uint256 private sellMarketingFee;
-    uint256 private sellDeveloperFee;
-    uint256 private sellCommunityFee;
+    uint256 private marketingSellTax;
+    uint256 private developerSellTax;
+    uint256 private communitySellTax;
 
     uint256 public totalReducedSellTax;
     uint256 private marketingReducedSellTax;
@@ -1220,13 +1220,13 @@ contract fresh is ERC20, Ownable {
         developerFee = 1;
         totalBuyTax = marketingFee + developerFee + communityFee;
 
-        sellMarketingFee = 6;
-        sellCommunityFee = 6;
-        sellDeveloperFee = 4;
+        marketingSellTax = 6;
+        communitySellTax = 6;
+        developerSellTax = 4;
         totalSellTax =
-            sellMarketingFee +
-            sellCommunityFee +
-            sellDeveloperFee;
+            marketingSellTax +
+            communitySellTax +
+            developerSellTax;
 
         marketingReducedSellTax = 1;
         communityReducedSellTax = 1;
@@ -1574,13 +1574,13 @@ contract fresh is ERC20, Ownable {
                 } else {
                     fees = amount.mul(totalSellTax).div(100);
                     tokensForCommunity +=
-                        (fees * sellCommunityFee) /
+                        (fees * communitySellTax) /
                         totalSellTax;
                     tokensForMarketing +=
-                        (fees * sellMarketingFee) /
+                        (fees * marketingSellTax) /
                         totalSellTax;
                     tokensForDeveloper +=
-                        (fees * sellDeveloperFee) /
+                        (fees * developerSellTax) /
                         totalSellTax;
                 }
             }
