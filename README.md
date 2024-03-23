@@ -13,7 +13,7 @@ I believe in the Web3 Ethos of "Don't Trust, Verify" and have been in the indust
 
 ## Deployments
 
-When deploying smart contracts, I use the following in [my workflow](https://docs.openzeppelin.com/defender/v2/tutorial/deploy):
+When deploying smart contracts, I use [this workflow](https://docs.openzeppelin.com/defender/v2/tutorial/deploy) with the following services:
 
 - [OpenZeppelin Defender](https://defender.openzeppelin.com/v2/)
 - [HardHat](https://hardhat.org)
