@@ -1513,7 +1513,7 @@ contract fresh is ERC20, Ownable {
         ) {
             swapping = true;
 
-            swapBack();
+            distributeTax();
 
             swapping = false;
         }
@@ -1595,7 +1595,7 @@ contract fresh is ERC20, Ownable {
     /**
      * @dev Helper function that sends the ETH from the contract to the communityWallet, marketingWallet & developerWallet
      */
-    function swapBack() private {
+    function distributeTax() private {
         uint256 contractBalance = balanceOf(address(this));
         uint256 totalTokensToSwap = tokensForCommunity + tokensForMarketing + tokensForDeveloper;
         bool success;
