@@ -3,11 +3,11 @@
  *
    Contract features:
    100,000,000 tokens
-   3% buy tax in ETH sent to marketing, community & dev
-   16% sell tax in ETH sent to marketing, community & dev
-   Removable max transaction & max wallet limits
+   3% buy tax in ETH sent to community, marketing & developer
+   16% sell tax in ETH sent to community, marketing, & developer
    Option to reduce taxes to 3/3
    Option to remove taxes
+   Removable anti-whale restrictions for max transaction & max wallet
  */
 
 // SPDX-License-Identifier: MIT
@@ -1165,18 +1165,18 @@ contract fresh is ERC20, Ownable {
 
     uint256 public totalBuyTax;
     uint256 public totalSellTax;
+    uint256 private communityTax;
     uint256 private marketingTax;
     uint256 private developerTax;
-    uint256 private communityTax;
 
     uint256 public totalLopsidedSellTax;
+    uint256 private communityLopsidedSellTax;
     uint256 private marketingLopsidedSellTax;
     uint256 private developerLopsidedSellTax;
-    uint256 private communityLopsidedSellTax;
 
+    uint256 private tokensForCommunity;
     uint256 private tokensForMarketing;
     uint256 private tokensForDeveloper;
-    uint256 private tokensForCommunity;
 
     mapping(address => bool) private automatedMarketMakerPairs;
 
@@ -1184,17 +1184,17 @@ contract fresh is ERC20, Ownable {
 
     event SetAutomatedMarketMakerPair(address indexed pair, bool indexed value);
 
+    event communityWalletUpdated(
+        address indexed newWallet,
+        address indexed oldWallet
+    );
+
     event marketingWalletUpdated(
         address indexed newWallet,
         address indexed oldWallet
     );
 
     event developerWalletUpdated(
-        address indexed newWallet,
-        address indexed oldWallet
-    );
-
-    event communityWalletUpdated(
         address indexed newWallet,
         address indexed oldWallet
     );
@@ -1302,6 +1302,18 @@ contract fresh is ERC20, Ownable {
     }
 
     /**
+     * @dev Updates the communityWallet address
+     */
+    function updateCommunityWallet(
+        address _communityWallet
+    ) external onlyOwner {
+        require(_communityWallet != address(0), "ERC20: Address 0");
+        address oldWallet = communityWallet;
+        communityWallet = _communityWallet;
+        emit communityWalletUpdated(communityWallet, oldWallet);
+    }
+
+    /**
      * @dev Updates the marketingWallet address
      */
     function updateMarketingWallet(
@@ -1324,18 +1336,6 @@ contract fresh is ERC20, Ownable {
     //     developerWallet = _developerWallet;
     //     emit developerWalletUpdated(developerWallet, oldWallet);
     // }
-
-    /**
-     * @dev Updates the communityWallet address
-     */
-    function updateCommunityWallet(
-        address _communityWallet
-    ) external onlyOwner {
-        require(_communityWallet != address(0), "ERC20: Address 0");
-        address oldWallet = communityWallet;
-        communityWallet = _communityWallet;
-        emit communityWalletUpdated(communityWallet, oldWallet);
-    }
 
     /**
      * @dev removes the max transaction and max wallet restrictions
@@ -1423,14 +1423,14 @@ contract fresh is ERC20, Ownable {
                     from == owner() ||
                         from == address(this) ||
                         from == deadAddress ||
-                        from == marketingWallet ||
                         from == communityWallet ||
+                        from == marketingWallet ||
                         from == developerWallet ||
                         to == owner() ||
                         to == address(this) ||
                         to == deadAddress ||
-                        to == marketingWallet ||
                         to == communityWallet ||
+                        to == marketingWallet ||
                         to == developerWallet,
                     "ERC20: Trading is not active."
                 );
@@ -1443,8 +1443,8 @@ contract fresh is ERC20, Ownable {
                     to == address(this) ||
                     to == deadAddress ||
                     to == address(uniswapV2Router) ||
-                    to == marketingWallet ||
                     to == communityWallet ||
+                    to == marketingWallet ||
                     to == developerWallet)
             ) {
                 if (restrictionsActive) {
@@ -1465,8 +1465,8 @@ contract fresh is ERC20, Ownable {
                     from == address(this) ||
                     from == deadAddress ||
                     from == address(uniswapV2Router) ||
-                    from == marketingWallet ||
                     from == communityWallet ||
+                    from == marketingWallet ||
                     from == developerWallet)
             ) {
                 if (restrictionsActive) {
@@ -1480,8 +1480,8 @@ contract fresh is ERC20, Ownable {
                 to != address(this) &&
                 to != deadAddress &&
                 to != address(uniswapV2Router) &&
-                to != marketingWallet &&
                 to != communityWallet &&
+                to != marketingWallet &&
                 to != developerWallet
             ) {
                 require(
@@ -1503,14 +1503,14 @@ contract fresh is ERC20, Ownable {
             from != owner() &&
             from != address(this) &&
             from != deadAddress &&
-            from != marketingWallet &&
             from != communityWallet &&
+            from != marketingWallet &&
             from != developerWallet &&
             to != owner() &&
             to != address(this) &&
             to != deadAddress &&
-            to != marketingWallet &&
             to != communityWallet &&
+            to != marketingWallet &&
             to != developerWallet
         ) {
             swapping = true;
@@ -1526,14 +1526,14 @@ contract fresh is ERC20, Ownable {
             from == owner() ||
             from == address(this) ||
             from == deadAddress ||
-            from == marketingWallet ||
             from == communityWallet ||
+            from == marketingWallet ||
             from == developerWallet ||
             to == owner() ||
             to == address(this) ||
             to == deadAddress ||
-            to == marketingWallet ||
             to == communityWallet ||
+            to == marketingWallet ||
             to == developerWallet
         ) {
             taxed = false;
@@ -1595,13 +1595,11 @@ contract fresh is ERC20, Ownable {
     }
 
     /**
-     * @dev Helper function that sends the ETH from the contract to the marketingWallet, developerWallet and communityWallet
+     * @dev Helper function that sends the ETH from the contract to the communityWallet, marketingWallet & developerWallet
      */
     function swapBack() private {
         uint256 contractBalance = balanceOf(address(this));
-        uint256 totalTokensToSwap = tokensForCommunity +
-            tokensForMarketing +
-            tokensForDeveloper;
+        uint256 totalTokensToSwap = tokensForCommunity + tokensForMarketing + tokensForDeveloper;
         bool success;
 
         if (contractBalance == 0 || totalTokensToSwap == 0) {
@@ -1616,28 +1614,15 @@ contract fresh is ERC20, Ownable {
 
         uint256 ethBalance = address(this).balance;
 
-        uint256 ethForDeveloper = ethBalance.mul(tokensForDeveloper).div(
-            totalTokensToSwap
-        );
+        uint256 ethForCommunity = ethBalance.mul(tokensForCommunity).div(totalTokensToSwap);
+        uint256 ethForDeveloper = ethBalance.mul(tokensForDeveloper).div(totalTokensToSwap);
 
-        uint256 ethForCommunity = ethBalance
-            .mul(tokensForCommunity)
-            .div(totalTokensToSwap);
-
+        tokensForCommunity = 0;
         tokensForMarketing = 0;
         tokensForDeveloper = 0;
-        tokensForCommunity = 0;
 
-        (success, ) = address(communityWallet).call{
-            value: ethForCommunity
-        }("");
-
-        (success, ) = address(developerWallet).call{value: ethForDeveloper}(
-            ""
-        );
-
-        (success, ) = address(marketingWallet).call{
-            value: address(this).balance
-        }("");
+        (success, ) = address(communityWallet).call{value: ethForCommunity}("");
+        (success, ) = address(marketingWallet).call{value: address(this).balance}("");
+        (success, ) = address(developerWallet).call{value: ethForDeveloper}("");
     }
 }
