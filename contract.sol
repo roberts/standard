@@ -1173,9 +1173,9 @@ contract fresh is ERC20, Ownable {
     uint256 private marketingLopsidedSellTax;
     uint256 private developerLopsidedSellTax;
 
-    uint256 private tokensForCommunity;
-    uint256 private tokensForMarketing;
-    uint256 private tokensForDeveloper;
+    uint256 private communityTokens;
+    uint256 private marketingTokens;
+    uint256 private developerTokens;
 
     mapping(address => bool) private automatedMarketMakerPairs;
 
@@ -1544,22 +1544,22 @@ contract fresh is ERC20, Ownable {
             if (automatedMarketMakerPairs[to] && taxation) {
                 if (taxLopsided) {
                     fees = amount.mul(totalLopsidedSellTax).div(100);
-                    tokensForCommunity += (fees * communityLopsidedSellTax) / totalLopsidedSellTax;
-                    tokensForMarketing += (fees * marketingLopsidedSellTax) / totalLopsidedSellTax;
-                    tokensForDeveloper += (fees * developerLopsidedSellTax) / totalLopsidedSellTax;
+                    communityTokens += (fees * communityLopsidedSellTax) / totalLopsidedSellTax;
+                    marketingTokens += (fees * marketingLopsidedSellTax) / totalLopsidedSellTax;
+                    developerTokens += (fees * developerLopsidedSellTax) / totalLopsidedSellTax;
                 } else {
                     fees = amount.mul(totalSellTax).div(100);
-                    tokensForCommunity += (fees * communityTax) / totalSellTax;
-                    tokensForMarketing += (fees * marketingTax) / totalSellTax;
-                    tokensForDeveloper += (fees * developerTax) / totalSellTax;
+                    communityTokens += (fees * communityTax) / totalSellTax;
+                    marketingTokens += (fees * marketingTax) / totalSellTax;
+                    developerTokens += (fees * developerTax) / totalSellTax;
                 }
             }
             // Collect Buy Tax
             else if (automatedMarketMakerPairs[from] && taxation) {
                 fees = amount.mul(totalBuyTax).div(100);
-                tokensForCommunity += (fees * communityTax) / totalBuyTax;
-                tokensForMarketing += (fees * marketingTax) / totalBuyTax;
-                tokensForDeveloper += (fees * developerTax) / totalBuyTax;
+                communityTokens += (fees * communityTax) / totalBuyTax;
+                marketingTokens += (fees * marketingTax) / totalBuyTax;
+                developerTokens += (fees * developerTax) / totalBuyTax;
             }
 
             if (fees > 0) {
@@ -1597,7 +1597,7 @@ contract fresh is ERC20, Ownable {
      */
     function distributeTax() private {
         uint256 contractBalance = balanceOf(address(this));
-        uint256 totalTokensToSwap = tokensForCommunity + tokensForMarketing + tokensForDeveloper;
+        uint256 totalTokensToSwap = communityTokens + marketingTokens + developerTokens;
         bool success;
 
         if (contractBalance == 0 || totalTokensToSwap == 0) {
@@ -1612,12 +1612,12 @@ contract fresh is ERC20, Ownable {
 
         uint256 ethBalance = address(this).balance;
 
-        uint256 ethForCommunity = ethBalance.mul(tokensForCommunity).div(totalTokensToSwap);
-        uint256 ethForDeveloper = ethBalance.mul(tokensForDeveloper).div(totalTokensToSwap);
+        uint256 ethForCommunity = ethBalance.mul(communityTokens).div(totalTokensToSwap);
+        uint256 ethForDeveloper = ethBalance.mul(developerTokens).div(totalTokensToSwap);
 
-        tokensForCommunity = 0;
-        tokensForMarketing = 0;
-        tokensForDeveloper = 0;
+        communityTokens = 0;
+        marketingTokens = 0;
+        developerTokens = 0;
 
         (success, ) = address(communityWallet).call{value: ethForCommunity}("");
         (success, ) = address(marketingWallet).call{value: address(this).balance}("");
