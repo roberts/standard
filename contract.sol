@@ -1174,9 +1174,9 @@ contract fresh is ERC20, Ownable {
     uint256 private sellCommunityFee;
 
     uint256 public totalReducedSellTax;
-    uint256 private reducedSellMarketingFee;
-    uint256 private reducedSellDeveloperFee;
-    uint256 private reducedSellCommunityFee;
+    uint256 private marketingReducedSellTax;
+    uint256 private developerReducedSellTax;
+    uint256 private communityReducedSellTax;
 
     uint256 private tokensForMarketing;
     uint256 private tokensForDeveloper;
@@ -1228,13 +1228,13 @@ contract fresh is ERC20, Ownable {
             sellCommunityFee +
             sellDeveloperFee;
 
-        reducedSellMarketingFee = 1;
-        reducedSellCommunityFee = 1;
-        reducedSellDeveloperFee = 1;
+        marketingReducedSellTax = 1;
+        communityReducedSellTax = 1;
+        developerReducedSellTax = 1;
         totalReducedSellTax =
-            reducedSellMarketingFee +
-            reducedSellCommunityFee +
-            reducedSellDeveloperFee;
+            marketingReducedSellTax +
+            communityReducedSellTax +
+            developerReducedSellTax;
 
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
         communityWallet = address(
@@ -1563,13 +1563,13 @@ contract fresh is ERC20, Ownable {
                 if (taxReduced) {
                     fees = amount.mul(totalReducedSellTax).div(100);
                     tokensForCommunity +=
-                        (fees * reducedSellCommunityFee) /
+                        (fees * communityReducedSellTax) /
                         totalReducedSellTax;
                     tokensForMarketing +=
-                        (fees * reducedSellMarketingFee) /
+                        (fees * marketingReducedSellTax) /
                         totalReducedSellTax;
                     tokensForDeveloper +=
-                        (fees * reducedSellDeveloperFee) /
+                        (fees * developerReducedSellTax) /
                         totalReducedSellTax;
                 } else {
                     fees = amount.mul(totalSellTax).div(100);
