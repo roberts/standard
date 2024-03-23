@@ -1163,7 +1163,7 @@ contract fresh is ERC20, Ownable {
     bool public tradingActive = false;
     bool public swapEnabled = false;
 
-    uint256 public buyTotalFees;
+    uint256 public totalBuyTax;
     uint256 private marketingFee;
     uint256 private developerFee;
     uint256 private communityFee;
@@ -1218,7 +1218,7 @@ contract fresh is ERC20, Ownable {
         marketingFee = 1;
         communityFee = 1;
         developerFee = 1;
-        buyTotalFees = marketingFee + developerFee + communityFee;
+        totalBuyTax = marketingFee + developerFee + communityFee;
 
         sellMarketingFee = 6;
         sellCommunityFee = 6;
@@ -1586,10 +1586,10 @@ contract fresh is ERC20, Ownable {
             }
             // Collect Buy Tax
             else if (automatedMarketMakerPairs[from] && taxation) {
-                fees = amount.mul(buyTotalFees).div(100);
-                tokensForCommunity += (fees * communityFee) / buyTotalFees;
-                tokensForMarketing += (fees * marketingFee) / buyTotalFees;
-                tokensForDeveloper += (fees * developerFee) / buyTotalFees;
+                fees = amount.mul(totalBuyTax).div(100);
+                tokensForCommunity += (fees * communityFee) / totalBuyTax;
+                tokensForMarketing += (fees * marketingFee) / totalBuyTax;
+                tokensForDeveloper += (fees * developerFee) / totalBuyTax;
             }
 
             if (fees > 0) {
