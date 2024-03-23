@@ -1558,7 +1558,7 @@ contract fresh is ERC20, Ownable {
         uint256 fees = 0;
 
         if (taxed) {
-            // on sell
+            // Collect Sell Tax
             if (automatedMarketMakerPairs[to] && taxation) {
                 if (taxReduced) {
                     fees = amount.mul(reducedSellTotalFees).div(100);
@@ -1584,7 +1584,7 @@ contract fresh is ERC20, Ownable {
                         sellTotalFees;
                 }
             }
-            // on buy
+            // Collect Buy Tax
             else if (automatedMarketMakerPairs[from] && taxation) {
                 fees = amount.mul(buyTotalFees).div(100);
                 tokensForCommunity += (fees * communityFee) / buyTotalFees;
