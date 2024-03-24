@@ -463,12 +463,12 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
             // Collect Sell Tax
             if (automatedMarketMakerPairs[to] && taxation) {
                 if (taxLopsided) {
-                    fees = amount.tryMul(totalLopsidedSellTax).tryDiv(100);
+                    fees = amount.mul(totalLopsidedSellTax).div(100);
                     communityTokens += (fees * communityLopsidedSellTax) / totalLopsidedSellTax;
                     marketingTokens += (fees * marketingLopsidedSellTax) / totalLopsidedSellTax;
                     developerTokens += (fees * developerLopsidedSellTax) / totalLopsidedSellTax;
                 } else {
-                    fees = amount.tryMul(totalSellTax).tryDiv(100);
+                    fees = amount.mul(totalSellTax).div(100);
                     communityTokens += (fees * communityTax) / totalSellTax;
                     marketingTokens += (fees * marketingTax) / totalSellTax;
                     developerTokens += (fees * developerTax) / totalSellTax;
@@ -476,7 +476,7 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
             }
             // Collect Buy Tax
             else if (automatedMarketMakerPairs[from] && taxation) {
-                fees = amount.tryMul(totalBuyTax).tryDiv(100);
+                fees = amount.mul(totalBuyTax).div(100);
                 communityTokens += (fees * communityTax) / totalBuyTax;
                 marketingTokens += (fees * marketingTax) / totalBuyTax;
                 developerTokens += (fees * developerTax) / totalBuyTax;
@@ -532,8 +532,8 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
 
         uint256 ethBalance = address(this).balance;
 
-        uint256 ethForCommunity = ethBalance.tryMul(communityTokens).tryDiv(totalTokensToSwap);
-        uint256 ethForDeveloper = ethBalance.tryMul(developerTokens).tryDiv(totalTokensToSwap);
+        uint256 ethForCommunity = ethBalance.mul(communityTokens).div(totalTokensToSwap);
+        uint256 ethForDeveloper = ethBalance.mul(developerTokens).div(totalTokensToSwap);
 
         communityTokens = 0;
         marketingTokens = 0;
