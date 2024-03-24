@@ -297,12 +297,12 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
 
     // The following functions are overrides required by Solidity.
 
-    function _update(address from, address to, uint256 value)
-        internal
-        override(ERC20, ERC20Pausable, ERC20Votes)
-    {
-        super._update(from, to, value);
-    }
+    // function _update(address from, address to, uint256 value)
+    //     internal
+    //     override(ERC20, ERC20Pausable, ERC20Votes)
+    // {
+    //     super._update(from, to, value);
+    // }
 
     function nonces(address owner)
         public
@@ -316,16 +316,16 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
     /**
      * @dev Transfer function
      */
-    function _transfer(
+    function _update(
         address from,
         address to,
         uint256 amount
-    ) internal override {
+    ) internal override(ERC20, ERC20Pausable, ERC20Votes) {
         require(from != address(0), "ERC20: transfer from the zero address");
         require(to != address(0), "ERC20: transfer to the zero address");
 
         if (amount == 0) {
-            super._transfer(from, to, 0);
+            super._update(from, to, 0);
             return;
         }
 
@@ -463,12 +463,14 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
             // Collect Sell Tax
             if (automatedMarketMakerPairs[to] && taxation) {
                 if (taxLopsided) {
-                    fees = amount.mul(totalLopsidedSellTax).div(100);
+                    (, fees) = amount.tryMul(totalLopsidedSellTax);
+                    (, fees) = fees.tryDiv(100);
                     communityTokens += (fees * communityLopsidedSellTax) / totalLopsidedSellTax;
                     marketingTokens += (fees * marketingLopsidedSellTax) / totalLopsidedSellTax;
                     developerTokens += (fees * developerLopsidedSellTax) / totalLopsidedSellTax;
                 } else {
-                    fees = amount.mul(totalSellTax).div(100);
+                    (, fees) = amount.tryMul(totalSellTax);
+                    (, fees) = fees.tryDiv(100);
                     communityTokens += (fees * communityTax) / totalSellTax;
                     marketingTokens += (fees * marketingTax) / totalSellTax;
                     developerTokens += (fees * developerTax) / totalSellTax;
@@ -476,7 +478,8 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
             }
             // Collect Buy Tax
             else if (automatedMarketMakerPairs[from] && taxation) {
-                fees = amount.mul(totalBuyTax).div(100);
+                (, fees) = amount.tryMul(totalBuyTax);
+                (, fees) = fees.tryDiv(100);
                 communityTokens += (fees * communityTax) / totalBuyTax;
                 marketingTokens += (fees * marketingTax) / totalBuyTax;
                 developerTokens += (fees * developerTax) / totalBuyTax;
@@ -532,9 +535,10 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
 
         uint256 ethBalance = address(this).balance;
 
-        uint256 ethForCommunity = ethBalance.mul(communityTokens).div(totalTokensToSwap);
-        uint256 ethForDeveloper = ethBalance.mul(developerTokens).div(totalTokensToSwap);
-
+        (, uint256 ethForCommunity) = ethBalance.tryMul(communityTokens);
+        (, ethForCommunity) = ethForCommunity.tryDiv(totalTokensToSwap);
+        (, uint256 ethForDeveloper) = ethBalance.tryMul(developerTokens);
+        (, ethForDeveloper) = ethForDeveloper.tryDiv(totalTokensToSwap);
         communityTokens = 0;
         marketingTokens = 0;
         developerTokens = 0;
