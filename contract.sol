@@ -1205,7 +1205,7 @@ contract Monday is ERC20, Ownable {
         );
         _approve(address(this), address(uniswapV2Router), type(uint256).max);
 
-        uint256 totalSupply = 1000 ether;
+        uint256 totalSupply = 100_000_000 ether;
 
         swapTokenAmount = totalSupply / 2000; // 0.05% of total supply (50,000 tokens)
 
