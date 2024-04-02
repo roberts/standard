@@ -12,7 +12,7 @@
 
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.17;
 pragma experimental ABIEncoderV2;
 
 // OpenZeppelin Contracts v4.4.1 (utils/Context.sol)
@@ -1136,12 +1136,13 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
 
-contract fresh is ERC20, Ownable {
+contract Monday is ERC20, Ownable {
     using SafeMath for uint256;
 
     IUniswapV2Router02 public immutable uniswapV2Router;
     address public uniswapV2Pair;
-    address public constant deadAddress = address(0x000000000000000000000000000000000000dEaD);
+    address public constant deadAddress =
+        address(0x000000000000000000000000000000000000dEaD);
 
     string exchangeLink = "https://app.uniswap.or/swap";
     string websiteLink = "https://DrewRoberts.com";
@@ -1198,8 +1199,10 @@ contract fresh is ERC20, Ownable {
         address indexed oldWallet
     );
 
-    constructor() ERC20("Drew Roberts Contract Standard", "FRESH") {
-        uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+    constructor() ERC20("Monday", "MNDY") {
+        uniswapV2Router = IUniswapV2Router02(
+            0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24
+        );
         _approve(address(this), address(uniswapV2Router), type(uint256).max);
 
         uint256 totalSupply = 100_000_000 ether;
@@ -1218,7 +1221,10 @@ contract fresh is ERC20, Ownable {
         communityLopsidedSellTax = 6;
         marketingLopsidedSellTax = 6;
         developerLopsidedSellTax = 4;
-        totalLopsidedSellTax = communityLopsidedSellTax + marketingLopsidedSellTax + developerLopsidedSellTax;
+        totalLopsidedSellTax =
+            communityLopsidedSellTax +
+            marketingLopsidedSellTax +
+            developerLopsidedSellTax;
 
         communityWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Community Funds
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
@@ -1435,43 +1441,45 @@ contract fresh is ERC20, Ownable {
             }
 
             //when buy
-            if (
-                automatedMarketMakerPairs[from] &&
-                (to == owner() ||
-                    to == address(this) ||
-                    to == deadAddress ||
-                    to == address(uniswapV2Router) ||
-                    to == communityWallet ||
-                    to == marketingWallet ||
-                    to == developerWallet)
-            ) {
-                if (restrictions) {
-                    require(
-                        amount <= restrictMaxTransaction,
-                        "ERC20: Max Transaction Exceeded"
-                    );
-                    require(
-                        amount + balanceOf(to) <= restrictMaxWallet,
-                        "ERC20: Max Wallet Exceeded"
-                    );
+            if (automatedMarketMakerPairs[from]) {
+                if (
+                    to != owner() &&
+                    to != address(this) &&
+                    to != deadAddress &&
+                    to != address(uniswapV2Router) &&
+                    to != communityWallet &&
+                    to != marketingWallet &&
+                    to != developerWallet
+                ) {
+                    if (restrictions) {
+                        require(
+                            amount <= restrictMaxTransaction,
+                            "ERC20: Max Transaction Exceeded"
+                        );
+                        require(
+                            amount + balanceOf(to) <= restrictMaxWallet,
+                            "ERC20: Max Wallet Exceeded"
+                        );
+                    }
                 }
             }
             //when sell
-            else if (
-                automatedMarketMakerPairs[to] &&
-                (from == owner() ||
-                    from == address(this) ||
-                    from == deadAddress ||
-                    from == address(uniswapV2Router) ||
-                    from == communityWallet ||
-                    from == marketingWallet ||
-                    from == developerWallet)
-            ) {
-                if (restrictions) {
-                    require(
-                        amount <= restrictMaxTransaction,
-                        "ERC20: Max Transaction Exceeded"
-                    );
+            else if (automatedMarketMakerPairs[to]) {
+                if (
+                    from != owner() &&
+                    from != address(this) &&
+                    from != deadAddress &&
+                    from != address(uniswapV2Router) &&
+                    from != communityWallet &&
+                    from != marketingWallet &&
+                    from != developerWallet
+                ) {
+                    if (restrictions) {
+                        require(
+                            amount <= restrictMaxTransaction,
+                            "ERC20: Max Transaction Exceeded"
+                        );
+                    }
                 }
             } else if (
                 to != owner() &&
@@ -1482,10 +1490,12 @@ contract fresh is ERC20, Ownable {
                 to != marketingWallet &&
                 to != developerWallet
             ) {
-                require(
-                    amount + balanceOf(to) <= restrictMaxWallet,
-                    "ERC20: Max Wallet Exceeded"
-                );
+                if (restrictions) {
+                    require(
+                        amount + balanceOf(to) <= restrictMaxWallet,
+                        "ERC20: Max Wallet Exceeded"
+                    );
+                }
             }
         }
 
@@ -1544,9 +1554,15 @@ contract fresh is ERC20, Ownable {
             if (automatedMarketMakerPairs[to] && taxation) {
                 if (taxLopsided) {
                     fees = amount.mul(totalLopsidedSellTax).div(100);
-                    communityTokens += (fees * communityLopsidedSellTax) / totalLopsidedSellTax;
-                    marketingTokens += (fees * marketingLopsidedSellTax) / totalLopsidedSellTax;
-                    developerTokens += (fees * developerLopsidedSellTax) / totalLopsidedSellTax;
+                    communityTokens +=
+                        (fees * communityLopsidedSellTax) /
+                        totalLopsidedSellTax;
+                    marketingTokens +=
+                        (fees * marketingLopsidedSellTax) /
+                        totalLopsidedSellTax;
+                    developerTokens +=
+                        (fees * developerLopsidedSellTax) /
+                        totalLopsidedSellTax;
                 } else {
                     fees = amount.mul(totalSellTax).div(100);
                     communityTokens += (fees * communityTax) / totalSellTax;
@@ -1597,7 +1613,9 @@ contract fresh is ERC20, Ownable {
      */
     function distributeTax() private {
         uint256 contractBalance = balanceOf(address(this));
-        uint256 totalTokensToSwap = communityTokens + marketingTokens + developerTokens;
+        uint256 totalTokensToSwap = communityTokens +
+            marketingTokens +
+            developerTokens;
         bool success;
 
         if (contractBalance == 0 || totalTokensToSwap == 0) {
@@ -1612,15 +1630,21 @@ contract fresh is ERC20, Ownable {
 
         uint256 ethBalance = address(this).balance;
 
-        uint256 ethForCommunity = ethBalance.mul(communityTokens).div(totalTokensToSwap);
-        uint256 ethForDeveloper = ethBalance.mul(developerTokens).div(totalTokensToSwap);
+        uint256 ethForCommunity = ethBalance.mul(communityTokens).div(
+            totalTokensToSwap
+        );
+        uint256 ethForDeveloper = ethBalance.mul(developerTokens).div(
+            totalTokensToSwap
+        );
 
         communityTokens = 0;
         marketingTokens = 0;
         developerTokens = 0;
 
         (success, ) = address(communityWallet).call{value: ethForCommunity}("");
-        (success, ) = address(marketingWallet).call{value: address(this).balance}("");
+        (success, ) = address(marketingWallet).call{
+            value: address(this).balance
+        }("");
         (success, ) = address(developerWallet).call{value: ethForDeveloper}("");
     }
 }
