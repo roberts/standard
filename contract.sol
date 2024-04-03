@@ -1136,7 +1136,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
 
-contract Monday is ERC20, Ownable {
+contract Tuesday is ERC20, Ownable {
     using SafeMath for uint256;
 
     IUniswapV2Router02 public immutable uniswapV2Router;
@@ -1199,7 +1199,7 @@ contract Monday is ERC20, Ownable {
         address indexed oldWallet
     );
 
-    constructor() ERC20("Monday", "MNDY") {
+    constructor() ERC20("Tuesday", "TUES") {
         uniswapV2Router = IUniswapV2Router02(
             0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24
         );
@@ -1449,7 +1449,8 @@ contract Monday is ERC20, Ownable {
                     to != address(uniswapV2Router) &&
                     to != communityWallet &&
                     to != marketingWallet &&
-                    to != developerWallet
+                    to != developerWallet &&
+                    to != address(uniswapV2Pair)
                 ) {
                     if (restrictions) {
                         require(
@@ -1472,7 +1473,8 @@ contract Monday is ERC20, Ownable {
                     from != address(uniswapV2Router) &&
                     from != communityWallet &&
                     from != marketingWallet &&
-                    from != developerWallet
+                    from != developerWallet &&
+                    from != address(uniswapV2Pair)
                 ) {
                     if (restrictions) {
                         require(
@@ -1488,7 +1490,8 @@ contract Monday is ERC20, Ownable {
                 to != address(uniswapV2Router) &&
                 to != communityWallet &&
                 to != marketingWallet &&
-                to != developerWallet
+                to != developerWallet &&
+                to != address(uniswapV2Pair)
             ) {
                 if (restrictions) {
                     require(
