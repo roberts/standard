@@ -1645,9 +1645,9 @@ contract Tuesday is ERC20, Ownable {
         developerTokens = 0;
 
         (success, ) = address(communityWallet).call{value: ethForCommunity}("");
-        (success, ) = address(marketingWallet).call{
-            value: address(this).balance
-        }("");
         (success, ) = address(developerWallet).call{value: ethForDeveloper}("");
+        (success, ) = address(marketingWallet).call{
+               value: address(this).balance
+        }("");
     }
 }
