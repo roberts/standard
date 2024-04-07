@@ -1636,7 +1636,7 @@ contract Tuesday is ERC20, Ownable {
         uint256 ethForCommunity = ethBalance.mul(communityTokens).div(
             totalTokensToSwap
         );
-        uint256 ethForDeveloper = ethBalance.mul(developerTokens).div(
+        uint256 ethForMarketing = ethBalance.mul(marketingTokens).div(
             totalTokensToSwap
         );
 
@@ -1645,9 +1645,9 @@ contract Tuesday is ERC20, Ownable {
         developerTokens = 0;
 
         (success, ) = address(communityWallet).call{value: ethForCommunity}("");
-        (success, ) = address(developerWallet).call{value: ethForDeveloper}("");
-        (success, ) = address(marketingWallet).call{
-               value: address(this).balance
+        (success, ) = address(marketingWallet).call{value: ethForMarketing}("");
+        (success, ) = address(developerWallet).call{
+            value: address(this).balance
         }("");
     }
 }
