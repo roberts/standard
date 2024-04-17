@@ -1144,8 +1144,8 @@ contract Tuesday is ERC20, Ownable {
     address public constant deadAddress =
         address(0x000000000000000000000000000000000000dEaD);
 
-    string exchangeLink = "https://app.uniswap.or/swap";
-    string websiteLink = "https://DrewRoberts.com";
+    string public exchangeLink = "https://app.uniswap.or/swap";
+    string public websiteLink = "https://DrewRoberts.com";
 
     address public communityWallet;
     address public marketingWallet;
