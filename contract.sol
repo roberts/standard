@@ -4,7 +4,7 @@
    Contract features:
    100,000,000 tokens
    3% buy tax in ETH sent to community, marketing & developer
-   16% sell tax in ETH sent to community, marketing, & developer
+   16% launch sell tax in ETH sent to community, marketing, & developer
    Option to reduce taxes to 3/3
    Option to remove taxes
    Removable anti-whale restrictions for max transaction & max wallet
