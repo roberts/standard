@@ -1228,7 +1228,7 @@ contract Tuesday is ERC20, Ownable {
 
         communityWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Community Funds
         marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
-        developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Developer Funds
+        developerWallet = address(0xA6d26E99660de4974B8994eCF75dcD4Cf34951B6); // Developer Funds
 
         _mint(address(this), totalSupply);
     }
