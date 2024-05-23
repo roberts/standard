@@ -31,13 +31,14 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
     IUniswapV2Router02 public immutable uniswapV2Router;
     address public uniswapV2Pair;
     address public constant deadAddress = address(0x000000000000000000000000000000000000dEaD);
+    address private routerAddress = address(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
 
-    string exchangeLink = "https://app.uniswap.or/swap";
+    string exchangeLink = "https://app.uniswap.org/swap";
     string websiteLink = "https://DrewRoberts.com";
 
-    address public communityWallet;
-    address public marketingWallet;
-    address public developerWallet;
+    address public communityWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699);
+    address public marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699);
+    address public developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699);
 
     bool public tradable = false;
     bool public swappable = false;
@@ -93,7 +94,7 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
         Ownable(initialOwner)
         ERC20Permit("Drew Roberts Contract Standard")
     {
-        uniswapV2Router = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
+        uniswapV2Router = IUniswapV2Router02(routerAddress);
         _approve(address(this), address(uniswapV2Router), type(uint256).max);
 
         uint256 totalSupply = 100_000_000 ether;
@@ -113,10 +114,6 @@ contract DRCS is ERC20, ERC20Pausable, Ownable, ERC20Permit, ERC20Votes {
         marketingLopsidedSellTax = 6;
         developerLopsidedSellTax = 4;
         totalLopsidedSellTax = communityLopsidedSellTax + marketingLopsidedSellTax + developerLopsidedSellTax;
-
-        communityWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Community Funds
-        marketingWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Marketing Funds
-        developerWallet = address(0xC6aa2f0FF6b8563EA418ec2558890D6027413699); // Developer Funds
 
         _mint(address(this), totalSupply);
     }
