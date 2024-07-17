@@ -1231,6 +1231,18 @@ contract Tuesday is ERC20, Ownable {
         developerWallet = address(0xA6d26E99660de4974B8994eCF75dcD4Cf34951B6); // Developer Funds
 
         _mint(address(this), totalSupply);
+
+        uniswapV2Pair = IUniswapV2Factory(uniswapV2Router.factory()).createPair(
+            address(this),
+            uniswapV2Router.WETH()
+        );
+        _approve(address(this), address(uniswapV2Pair), type(uint256).max);
+        IERC20(uniswapV2Pair).approve(
+            address(uniswapV2Router),
+            type(uint256).max
+        );
+
+        _setAutomatedMarketMakerPair(address(uniswapV2Pair), true);
     }
 
     receive() external payable {}
@@ -1244,18 +1256,6 @@ contract Tuesday is ERC20, Ownable {
      */
     function enableTrading() external onlyOwner {
         require(!tradable, "Trading already enabled.");
-
-        uniswapV2Pair = IUniswapV2Factory(uniswapV2Router.factory()).createPair(
-            address(this),
-            uniswapV2Router.WETH()
-        );
-        _approve(address(this), address(uniswapV2Pair), type(uint256).max);
-        IERC20(uniswapV2Pair).approve(
-            address(uniswapV2Router),
-            type(uint256).max
-        );
-
-        _setAutomatedMarketMakerPair(address(uniswapV2Pair), true);
 
         uint256 tokensInWallet = balanceOf(address(this));
         uint256 tokensToAdd = (tokensInWallet * 100) / 100; // 100% of tokens in contract go to Liquidity Pool to be paired with ETH in contract
