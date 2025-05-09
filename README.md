@@ -66,7 +66,7 @@ The following function enables trading of tokens:
 
 - enableTrading() - This function launches the Uniswap V2 Liquidity Pool with the tokens & ETH in the contract
 
-### Anti-Whale Restrictins
+### Anti-Whale Restrictions
 
 There are 2 anti-whale restrictions in this contract standard. The first is a max transaction that I have found is best to be 2% or less of the total supply. The second is a max wallet which I have found is best to be 5% of the total supply, allowing multiple buys. These are necessary for heavily marketed launches and to prevent whales accumulating at launch, especially bots. 15-30 minutes after launch, this should be removed with the following function:
 
